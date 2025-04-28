@@ -159,7 +159,19 @@ const login = (req, res) => {
       // }
     
           const redirectUrl = user.fk_rol === 1 ? "/admin" : "/dashboard";
-          res.json({ message: 'Inicio de sesión exitoso', auth: true , token,  redirect:redirectUrl});
+          // URL de la imagen de perfil (esto debe ser relativo a donde se sirven las imágenes)
+          const imageUrl = user.imagen_perfil ? `http://localhost:3000/uploads/${user.imagen_perfil}` : null;
+
+          res.json({ message: 'Inicio de sesión exitoso',
+            auth: true ,
+            token,
+            redirect:redirectUrl,
+            user: { // Aca estamos incluyendo los datos del usuario
+              usuario: user.usuario,
+              email: user.email,
+              imageUrl 
+            }
+          });
       });
       
   });

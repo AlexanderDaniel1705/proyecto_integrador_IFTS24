@@ -40,6 +40,23 @@ document.querySelector(".btn-log-out").addEventListener("click",() =>{
             }
         });
 
+        document.addEventListener("DOMContentLoaded", () => {
+            // Recuperar los datos del usuario del sessionStorage
+            const user = JSON.parse(sessionStorage.getItem('user'));
+        
+        
+        if (user) {
+            // Actualizar los elementos con los datos del usuario
+            document.getElementById('user-name').textContent = user.usuario;   // Nombre de usuario
+            document.getElementById('user-email').textContent = user.email;   // Correo electrónico
+            document.getElementById('user-image').src = user.imageUrl || '/uploads/default.png'; // Imagen de perfil
+            document.getElementById('user-image').alt = `Imagen de ${user.usuario}`; // Texto alternativo para la imagen
+            console.log(user); 
+        } else {
+            console.log("No se encontraron datos del usuario.");
+        }
+    });
+  
 
         //  // Importacion Gestion usuarios
         // document.querySelector(".btnGestionUsuarios").addEventListener("click", async () => {

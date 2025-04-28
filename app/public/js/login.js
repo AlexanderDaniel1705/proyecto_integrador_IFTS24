@@ -48,8 +48,12 @@ try {
         return;
     }
 
+      // Almacenamos los datos del usuario en sessionStorage
+      if (resJson.user) {
+        sessionStorage.setItem('user', JSON.stringify(resJson.user));
+    }
 
-
+    // Redirigimos al usuario según el rol
     if (resJson.redirect) {
         window.location.href = resJson.redirect;
     } else {
