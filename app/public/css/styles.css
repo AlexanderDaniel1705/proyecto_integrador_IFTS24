@@ -1,0 +1,462 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap');
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+.navbar ul li {
+    margin-left: 45px;
+    padding: 20px 0;
+}
+
+
+/* Estilo adicional para los iconos de login y registro */
+.navbar-nav .nav-link i {
+    margin-right: 5px; /* Espacio entre el ícono y el texto */
+    color: #ffffff; /* Color blanco para los íconos */
+}
+
+.navbar-nav .nav-link {
+
+    font-weight: bold;
+    transition: color 0.3s ease, background-color 0.3s ease; /* Transición suave */
+    border-radius: 10px;
+}
+
+.login  {
+        color: #ffffff;  
+        font-weight: bold;
+        font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+.registro  {
+    color: #ffffff;
+    font-weight: bold;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+
+
+.navbar-nav .nav-link:hover {
+    background-color: #0fa1c5; 
+    border-radius: 10px;
+}
+
+
+
+.body-home{  
+    background:linear-gradient(rgba(75, 75, 112, 0.705), rgba(240, 240, 252, 0.705)), url(../images/cervezas.jpg) 
+    center center no-repeat ;
+    background-size: cover;
+    background-attachment: fixed;   
+}
+
+.home h2 {
+    margin-top: 10px;
+    font-size: 80px;
+    color: #213c4e;
+    font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif
+}
+.home h1  {
+    
+    font-size: 80px;
+    color: #147bc0;
+    font-family:Georgia, 'Times New Roman', Times, serif;
+    text-shadow: 4px 4px 9px #000;
+}
+
+
+.d-img {
+height: 450px;
+object-fit:contain;
+}
+
+.logo-home {
+    margin-top: 15px;
+    box-shadow: 7px 13px 37px #000;
+    border-radius: 10em;
+}
+
+
+
+
+.btn {
+    margin-top: 20px;
+    margin-bottom: 15px;   
+}
+
+.btn a {
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+
+/*estilos acerca de*/
+.body-acerca { 
+    background: linear-gradient(rgba(83, 83, 92, 0.705), rgba(240, 240, 252, 0.705)),
+    url(../images/acerca.jpg) center center no-repeat ;
+    background-size: cover;
+    background-attachment: fixed;   
+}
+
+
+.acerca h1 {
+    color: #147bc0;
+    font-size: 80px;
+    font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    margin-bottom: 20px;
+    text-shadow: 4px 4px 9px #000;
+}
+
+.acerca h2 {
+    color: #16364b;
+    font-size: 30px;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    margin-bottom: 10px;
+}
+
+.acerca h3 {
+    color: #314858; 
+    font-size: 28px;
+    font-family:Arial, Helvetica, sans-serif;
+    margin-bottom: 10px;
+}
+
+.acerca p {
+    font-size: 19px;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/*historia de la cerveza*/
+.body-historia {
+    background: linear-gradient(rgba(83, 83, 92, 0.705), rgba(240, 240, 252, 0.705)),
+    url(../images/historia.jpeg) center center no-repeat ;
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+
+
+.historia h1 {  
+    color: #147bc0;
+    font-size: 80px;
+    font-weight: bold;
+    font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    margin-bottom: 20px;
+    text-shadow: 4px 4px 9px #000;
+}
+
+.historia h3 {
+    color: #16364b;
+    font-size: 25px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.historia h4 {
+    color: #213c4e;
+    margin-bottom: 15px;
+    margin-top: 15px;
+    font-size: 20px;
+font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.historia p {
+    font-weight: bold;
+    font-size: 15px;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/*contacto*/
+.contacto-body {
+    background: linear-gradient(rgba(75, 75, 112, 0.705), rgba(240, 240, 252, 0.705)),
+
+    url(../images/contacto.jpg) center center no-repeat ;
+    background-size: cover;
+    background-attachment: fixed;
+}
+.contacto {
+    font-size: x-large;
+    text-align: center;
+    height: 100%;
+    margin-bottom: 17%;
+}
+
+.contacto h1 {
+    margin-top: 60px;
+    color: #36607c;
+    font-size: 90px;
+    font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    text-shadow: 4px 4px 9px #000;
+}
+
+.contacto h2 {
+    font-size: 50px;
+    margin-top: 100px;
+    margin-bottom: 20px;
+    color: #16364b;
+}
+
+.contacto h4 i {
+    margin-top: 20px;
+    color: #0f7a1d;
+    font-size: 1.2em;
+}
+
+.contacto .mail {
+    color: black;
+}
+
+
+
+/*sucursales*/
+
+.body-sucursal{
+    background: linear-gradient(rgba(166, 166, 179, 0.705), rgba(136, 136, 146, 0.705)),
+    url(/images/Cerveceria.jpg) center center no-repeat ;
+    background-size: cover;
+    background-attachment: fixed;    
+}
+
+.sucursal {
+    text-align: center;
+}
+
+.sucursal h1 {
+    color: #36607c;
+    text-align: center;
+    font-size: 80px;
+    font-family:Verdana, Geneva, Tahoma, sans-serif;
+    text-shadow: 4px 4px 9px #000;
+}
+
+.sucursal h2 {
+    margin-top: 10px;
+    padding-bottom: 10px;
+    font-size: 50px;
+    color: #264e69;
+}
+
+.sucursal h3 {
+    font-size: 30px;
+    color: #ac3f24;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+.sucursal ul li {
+    padding-bottom: 10px;
+    list-style-type: none;
+}
+
+.sucursal ul li a {
+    text-decoration: none;
+}
+
+#mapa {
+    margin-bottom: 10px;
+}
+
+
+/*registro*/
+.body-registro {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100svh;
+    font-size: larger;
+    background: linear-gradient(rgba(75, 75, 112, 0.705), rgba(240, 240, 252, 0.705)),
+    url(/images/brindis.avif) center center no-repeat ;
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+.titulo {
+    color: #26597a;
+    font-family:Verdana, Geneva, Tahoma, sans-serif;
+    text-align: center;
+}
+.form-container{
+    background-color: #c8c8da;
+    width: 500px;
+    border-radius: 10px;
+    padding: 50px
+    
+};
+
+
+#login-form{
+    display: flex;
+}
+
+#login-form+p form p{
+    text-align: center;
+}
+
+input, button{
+    border-radius: 4px;
+    border: unset;
+    display: block;
+    margin-top: 1rem;
+    font-size: larger;
+}
+
+button{
+    background-color: rgb(125, 139, 219);
+    padding: 10px;
+    color: aliceblue;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+
+.sr-only{
+    position: absolute;
+    left: -10000px;
+    top: auto;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+}
+
+#genero {
+    margin-top: 10px;
+    margin-bottom: 30px;
+    margin-left:30px; 
+}
+
+#sabor {
+    margin-top: 10px;
+    margin-bottom: 30px;
+    margin-left:30px; 
+}
+
+/*clientes*/
+.body-clientes {
+    background: linear-gradient(rgba(75, 75, 112, 0.705), rgba(240, 240, 252, 0.705)),
+    url(/images/clientes.jpg) center center no-repeat ;
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+.clientesTitulo h1 {
+    color: #147bc0;
+    text-align: center;
+    margin: 50px auto;
+    font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    text-shadow: 4px 4px 9px #000;
+    font-size: 70px;
+    font-weight: bold;
+}
+
+.img-galeria {
+    width: 80%;
+    margin: 80px auto 50px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 30px;
+}
+
+.img-galeria .imgGal {
+    width: 100%;
+    height: 200px;
+    cursor: pointer;
+    transition: 1s;
+    outline: 1px solid #fff;
+}
+
+.img-galeria .imgGal:hover {
+    transform: scale(1.2);
+}
+
+.full-img{
+    width: 100%;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.7);
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 99;
+}
+
+.full-img i {
+    color: #fff;
+    font-size: 2rem;
+    cursor: pointer;
+    background-color: #000;
+}
+
+.full-img span {
+    color: #fff;
+    position: absolute;
+    top: 5%;
+    right: 5%;
+    font-size: 30px;
+    cursor: pointer;
+}
+
+.full-img img {
+    width: 90%;
+    max-width: 600px;
+}
+
+/* #galeria .col-lg-4 {
+    padding: 10px;
+}
+#galeria img {
+    width: 100%;
+    height: 250px;
+    height: 300px;
+    transition: all 0.5s ease;
+}
+
+#galeria img:hover {
+    border: 5px solid #204a52;
+}
+
+#galeria p {
+    font-weight: bold;
+} */
+/*footer*/
+.pin  {
+    font-size: 1.2em;
+    margin-left: 2em;    
+}
+
+.pin1 {
+    color: #4d4545;  
+}
+.pin2{
+    
+    color:#4d4545;
+}
+.pin3{
+    
+    color: #4d4545;
+}
+footer {
+    font-size: 20px;
+    width: 100%;
+    text-align: center;
+}
+
+
+@media (max-width: 576px) { /* Móviles */
+    .navbar { flex-direction: column; }
+    .carousel-item img { height: auto; }
+    
+}
+
+@media (min-width: 768px) and (max-width: 992px) { /* Tablets */
+    .container { max-width: 720px; }
+}
+@media (min-width: 1200px) { /* Desktops grandes */
+    .container { max-width: 1140px; }
+}
+
+
+

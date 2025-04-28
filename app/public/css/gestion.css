@@ -1,0 +1,42 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+
+body {
+    background: linear-gradient(rgba(75, 75, 112, 0.705), rgba(240, 240, 252, 0.705)),
+    url(/images/clientes.jpg) center center no-repeat ;
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+.sr-only{
+    position: absolute;
+    left: -10000px;
+    top: auto;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+}
+
+td {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.errorFecha {
+    color: rgb(226, 22, 22);
+}
+
+.errorEmail {
+    color: rgb(226, 22, 22);
+
+}
+.error {
+    color: rgb(202, 65, 92);
+}
+
+.escondido{
+    display: none;
+}

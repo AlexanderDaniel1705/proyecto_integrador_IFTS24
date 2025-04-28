@@ -1,0 +1,220 @@
+body {
+    /* display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0; */
+    min-height: 100svh;
+    background: linear-gradient(rgba(75, 75, 112, 0.705), rgba(240, 240, 252, 0.705)),
+    url(/images/brindis.avif) center center no-repeat ;
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+.navbar ul li {
+    margin-left: 45px;
+    padding: 20px 0;
+}
+
+
+/* Estilo adicional para los iconos de login y registro */
+.navbar-nav .nav-link i {
+    margin-right: 5px; /* Espacio entre el ícono y el texto */
+    color: #ffffff; /* Color blanco para los íconos */
+}
+
+.navbar-nav .nav-link {
+
+    font-weight: bold;
+    transition: color 0.3s ease, background-color 0.3s ease; /* Transición suave */
+    border-radius: 10px;
+}
+
+.navbar-nav .nav-link:hover {
+    background-color: #0fa1c5; 
+    border-radius: 10px;
+}
+
+.form-container {
+    max-width: 400px;
+    margin: 60px auto;
+    padding: 30px;
+    background-color: #c4cbd3;
+    border-radius: 8px;
+    box-shadow: 7px 13px 37px #000;
+}
+
+form{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+}
+.titulo {
+    color: #000000;
+    font-family:Verdana, Geneva, Tahoma, sans-serif;
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+/*   */
+
+
+.form-container input {
+    width: 100%;
+    padding: 5px;
+    border: none;
+    border-radius: 4px;
+    /* transition: border-color 0.2s ease; */
+    cursor: pointer;
+}
+
+.form-container label {
+    padding-bottom: 10px;
+    font-weight: bold;
+}
+
+.form-container .btnRegistro {
+    width: 100%;
+    padding: 10px;
+    background-color: #fcfcfc;
+    color: #000000;
+    font-size: 1.2em;
+    font-weight: bold;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+
+.form-container .btnLogin:hover {
+    background-color: #a4fcff;
+}
+.form-container .btnLogin {
+    width: 100%;
+    padding: 10px;
+    background-color: #fcfcfc;
+    color: #000000;
+    font-size: 1.2em;
+    font-weight: bold;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+
+.form-container .btnRegistro:hover {
+    background-color: #a4fcff;
+}
+p{
+    font-weight: bold;
+    text-align: center;
+}
+
+p a{
+    color: rgb(77, 107, 47);
+}
+.sr-only{
+    position: absolute;
+    left: -10000px;
+    top: auto;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+}
+
+
+/* #genero {
+    margin-top: 10px;
+    margin-bottom: 30px;
+    margin-left:30px; 
+} */
+
+/* #sabor {
+    margin-top: 10px;
+    margin-bottom: 30px;
+    margin-left:30px; 
+} */
+
+.errorFecha {
+    color: rgb(255, 0, 0);
+    text-align: center;
+}
+.errorUsuario {
+    color: rgb(255, 0, 0);
+    text-align: center;
+}
+.errorEmail {
+    color: rgb(255, 0, 0);
+    text-align: center;
+}
+.errorPassword {
+    color: rgb(255, 0, 0);
+    text-align: center;
+}
+.error {
+    color: rgb(255, 0, 0);
+    text-align: center;
+}
+
+.escondido{
+    display: none;
+}
+
+
+/* Footer básico */
+footer {
+    font-size: 20px;
+    width: 100%;
+    text-align: center;
+    /* background-color: #f8f9fa; Fondo suave */
+    padding: 5px 0; /* Espaciado interno */
+    position:fixed; /* Para ajustarse al contenido */
+    bottom: 0;
+}
+
+.password_container {
+    display: flex;
+    align-items: center;
+  }
+  .password_container input {
+    margin-right: 10px;
+  }
+  .icon {
+    cursor: pointer;
+  }
+
+
+
+
+/* Para el diseño responsive */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.pin {
+    font-size: 1.5em; /* Tamaño de íconos más grande */
+    margin-right: 1em;
+}
+
+.pin1, .pin2, .pin3 {
+    color: #4d4545; /* Mismo color para consistencia */
+    transition: color 0.3s; /* Efecto al pasar el mouse */
+}
+
+.pin1:hover, .pin2:hover, .pin3:hover {
+    color: #007bff; /* Cambia a un color azul claro */
+}
+
+/* Ajuste responsive */
+@media (max-width: 768px) {
+    footer nav {
+        flex-direction: column;
+        text-align: center;
+    }
+    .col-4 {
+        margin-bottom: 10px;
+    }
+}
