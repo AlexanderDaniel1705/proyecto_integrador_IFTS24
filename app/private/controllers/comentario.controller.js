@@ -4,20 +4,44 @@ const db = require('../models/db');
 
 // Obtener todos los comentarios
 const allComentarios = (req, res) => {
-    const query = 'SELECT * FROM galeria';
+    const query = `
+    SELECT
+     galeria.id_galeria,
+     usuarios.id_usuario AS fk_usuario,
+     usuarios.usuario,
+     galeria.img_galeria,
+     galeria.pie_galeria
+     FROM galeria
+     LEFT JOIN usuarios ON galeria.fk_usuario = usuarios.id_usuario
+    `;
     db.query(query, (err, results) => {
-        if (err) return res.status(500).json({ error: 'Error al obtener la galeria' });
+        if (err) {
+            console.error("Error al obtener la galería:", err);
+            return res.status(500).json({ error: 'Error al obtener la galería' });
+        }
+        
+        console.log("Datos enviados por la API:", JSON.stringify(results, null, 2));
         res.json(results);
     });
+
 };
 
 // Obtener un comentario por ID
 const showComentario = (req, res) => {
     const { id } = req.params;
-    const query = 'SELECT * FROM galeria WHERE id = ?';
+    const query = `
+    SELECT
+     galeria.id_galeria,
+     usuarios.usuario AS usuario,
+     galeria.img_galeria,
+     galeria.pie_galeria
+     FROM galeria
+     LEFT JOIN usuarios ON galeria.fk_usuario = usuarios.id_usuario
+     WHERE galeria.id_galeria = ?
+     `;
     db.query(query, [id], (err, results) => {
-        if (err) return res.status(500).json({ error: 'Error al buscar la imagen' });
-        if (results.length === 0) return res.status(404).json({ error: 'Imagen no encontrado' });
+        if (err) return res.status(500).json({ error: 'Error al buscar la galeria' });
+        if (results.length === 0) return res.status(404).json({ error: 'Galeria no encontrado' });
         res.json(results[0]);
     });
 };
@@ -50,6 +74,7 @@ const updateComentario = (req, res) => {
     
     //Verifica que el ID y el comentario existen
     if (!fk_usuario || !pie_galeria) {
+        console.log("Datos recibidos en el PUT:", req.body);
         return res.status(400).json({ error: "El ID_usuario  y el texto son requeridos." });
     }
 
@@ -63,7 +88,8 @@ const updateComentario = (req, res) => {
 
         const currentImage = result[0].img_galeria;
         const finalImage = imageName || currentImage; //  Si no hay nueva imagen, mantener la anterior
-
+        console.log("Imagen actual en la base de datos:", currentImage);
+        console.log("Imagen seleccionada para la actualización:", finalImage);
         // Actualizar el comentario con la imagen correcta
         const updateQuery = "UPDATE galeria SET fk_usuario = ?, img_galeria = ?, pie_galeria = ? WHERE id_galeria = ?";
         db.query(updateQuery, [fk_usuario, finalImage, pie_galeria, comentarioId], (updateErr) => {

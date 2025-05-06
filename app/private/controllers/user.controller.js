@@ -139,7 +139,7 @@ const updateUser = (req, res) => {
         return res.status(400).json({mensaje: "Todos los campos son requeridos"})
     }
 
-    // 🔥 Si no se sube una nueva imagen, obtener la actual de la base de datos
+    // Si no se sube una nueva imagen, obtener la actual de la base de datos
     const selectQuery = "SELECT imagen_perfil FROM usuarios WHERE id_usuario = ?";
     db.query(selectQuery, [id], (err, result) => {
         if (err || result.length === 0) {

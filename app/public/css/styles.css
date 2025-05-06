@@ -421,9 +421,9 @@ button{
 
 .galeria-usuario {
     font-size: 22px;
+    color: #0d2c41;
     font-weight: bold;
     margin-bottom: 10px;
-    text-transform: uppercase; /* Convierte el texto a mayúsculas */
 }
 
 .galeria-comentario {

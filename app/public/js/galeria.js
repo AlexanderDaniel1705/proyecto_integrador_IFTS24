@@ -14,10 +14,10 @@ fetch('http://localhost:3000/galeria') // URL según API
             const img = document.createElement('img'); // Crea un elemento <img> para la imagen
             const p = document.createElement('p'); // Crea un elemento <p> para el comentario
 
-            h3.textContent= item.fk_usuario;//Inserta el usuario
+            h3.textContent= item.usuario;//Inserta el usuario
             img.src = `uploadsGaleria/${item.img_galeria}`; // Ajusta la ruta de la imagen según la ubicación en el servidor
             img.classList.add('imgGal'); // Agrega la clase CSS para estilizar la imagen
-            img.alt = item.fk_usuario; // Usa el nombre del usuario como atributo 'alt' de la imagen
+            img.alt = item.usuario; // Usa el nombre del usuario como atributo 'alt' de la imagen
 
             p.textContent = item.pie_galeria; // Inserta el texto del comentario debajo de la imagen
             p.classList.add('galeria-comentario');

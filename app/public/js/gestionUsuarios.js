@@ -105,6 +105,7 @@ export const cargarUsuarios = async () => {
       tablaCuerpoUsuarios.innerHTML = ""; // Limpiar la tabla antes de llenarla
 
       dataUsuarios.forEach((usuarios) => {
+        console.log("Datos de los usuarios cargados:", dataUsuarios);
           const filaUsuarios = document.createElement("tr");
 
           const fechaFormateada = new Date(usuarios.fecha_nacimiento).toLocaleDateString("es-ES", {
@@ -283,169 +284,14 @@ export const cargarUsuarios = async () => {
   tablaUsuarios.dataset.eventRegistered = true;
 };
 
-// const btnAgregarUsuarios = document.querySelector("#btnAgregarUsuarios");
-
-// btnAgregarUsuarios.addEventListener('click', async () => {
-//   // Limpia todos los campos del formulario
-//   if (formUsuario) formUsuario.reset(); // Reinicia el formulario para creación
-  
-
-
-//   const imgAgregarUsuario = document.querySelector("#img-preview");
-//   if (imgAgregarUsuario) {
-      
-//       imgAgregarUsuario.style.display = "none"; // Oculta la imagen previa
-//   }
-
-//   // Limpia los select antes de cargar las opciones
-//   document.querySelector("#rol_usuario").innerHTML = '<option value="" disabled selected>Selecciona un rol</option>';
-//   document.querySelector("#generos").innerHTML = '<option value="" disabled selected>Selecciona un género</option>';
-//   document.querySelector("#provincias").innerHTML = '<option value="" disabled selected>Selecciona una provincia</option>';
-
-//   // Carga los valores de los select dinámicamente
-//   await cargarRoles(); // Cargar roles desde el backend
-//   await cargarGeneros(); // Cargar géneros desde el backend
-//   await cargarProvincias(); // Cargar provincias desde el backend
-
-//   // Abre el modal para crear
-//   modalUsuarios.show();
-//   accionFormUsuario = 'crear'; // Configura la opción para "crear"
-// });
-// // Ejecuto la función automáticamente al cargar `gestionUsuarios.js`
-// document.addEventListener("DOMContentLoaded", () => {
-//   cargarUsuarios();
-// });
-
-  
-
-
-//   const on = (element, event, selector, handler) => {
-//     // console.log(handler);//controlador que se ejecuta en caso de un evento
-//     //codigo js q se ejecuta en caso de acciones por parte del usuario
-
-//     element.addEventListener(event, e => {
-//       if(e.target.closest(selector)){
-//         handler(e)
-//       }
-//     })
-//   };
-
-
-// //Procedimiento editar
-// let idFormUsuario = 0;
-// on(document, 'click', '.btnEditar', async e => {
-//   const filaUsuarios = e.target.closest('tr'); // Encuentra la fila más cercana
-//   idFormUsuario = filaUsuarios.children[0].innerHTML;
-//   const usuarioForm = filaUsuarios.children[1].innerHTML;
-//   const nombreForm = filaUsuarios.children[2].innerHTML;
-//   const apellidoForm = filaUsuarios.children[3].innerHTML;
-//   const imagenSrc = filaUsuarios.children[4].querySelector("img").src;// Obtiene la URL de la imagen de perfil
-//   const rolForm = filaUsuarios.children[5].innerHTML;
-//   const emailForm = filaUsuarios.children[6].innerHTML;
-//   const fechaNacForm = filaUsuarios.children[7].innerHTML;
-//   const generoForm = filaUsuarios.children[8].innerHTML;
-//   const provinciaForm = filaUsuarios.children[9].innerHTML;
-
-//   // Asignar valores a los campos
-//   document.getElementById("user").value = usuarioForm;
-//   document.getElementById("name").value = nombreForm;
-//   document.getElementById("lastname").value = apellidoForm;
-//   document.getElementById("email").value = emailForm;
-
-//   // Mostrar la imagen de perfil en el formulario de edición
-//   const imgPreview = document.querySelector("#img-preview");
-//   if(imgPreview) {
-//     imgPreview.src = imagenSrc; //Asigna la imagen al formulario
-//     imgPreview.style.display = "block";//aseguro q laimagen sea visible
-//   };
-
-
-
-//   // Asegurarse de que los selects tienen las opciones antes de asignar valores
-//   try {
-//     // Cargar y asignar selects dinámicos
-//     await cargarRoles();
-//     const rolId = Array.from(document.getElementById("rol_usuario").options).find(
-//         option => option.textContent === rolForm
-//     )?.value;
-//     document.getElementById("rol_usuario").value = rolId || "";
-
-//     await cargarGeneros();
-//     const generoId = Array.from(document.getElementById("generos").options).find(
-//         option => option.textContent === generoForm
-//     )?.value;
-//     document.getElementById("generos").value = generoId || "";
-
-//     await cargarProvincias();
-//     const provinciaId = Array.from(document.getElementById("provincias").options).find(
-//         option => option.textContent === provinciaForm
-//     )?.value;
-//     document.getElementById("provincias").value = provinciaId || "";
-// } catch (error) {
-//     console.error("Error al cargar los selects dinámicos:", error);
-// }
-
-//   // Verificar formato de fecha y asignar
-//   const [day, month, year] = fechaNacForm.split("/");
-//   const formattedDate = `${year}-${month}-${day}`;
-//   document.getElementById("fechaNac").value = formattedDate;
-
-//   accionFormUsuario = "editar";
-//   modalUsuarios.show();
-// });
-
-
-// //Procedimiento borrar
-//   on(document, 'click', '.btnBorrar', e => {
-//     const filaUsuarios = e.target.closest('tr'); // Encuentra la fila más cercana
-//     // const fila = e.target.parentNode.parentNode
-//     const id = filaUsuarios.firstElementChild.innerHTML
-
-//     // Configuro Alertify para ocultar el encabezado
-//     alertify.defaults.glossary.title = ''; // Título vacío
-
-//     alertify.confirm("¿Está seguro de eliminar el usuario?.",
-//       function(){
-//         fetch(url+id,{
-//           method: 'DELETE'
-//         })
-//         .then(res => {
-//           if (!res.ok) throw new Error("Error al eliminar el usuario.");
-//           return res.json();
-//       })
-  
-//       // .then(() => location.reload())
-//       .then(() => { 
-//         filaUsuarios.remove();// Elimina la fila sin recargar la página
-//     alertify.alert("Usuario eliminado.", function(){
-//     alertify.message('OK');
-//   });
-// })
-      
-//       .catch(error => {
-//         console.error("Error durante la eliminación:", error);
-//         alertify.error("Hubo un problema al intentar eliminar el usuario."); 
-//     });
-
-  
-//      // alertify.success('Ok')
-//       },
-//       function(){
-//         alertify.error('Cancel')
-//       });
-//   });
-
-  
 
 
 //Procedimientos para crear y editar
 formUsuario.addEventListener('submit', async (e) => {
   e.preventDefault();
-// const userPic = document.getElementById("user_pic"); // Campo de archivo
-//     const imgPreview = document.getElementById("img-preview").src; // Imagen actual
-
 
   const formData = new FormData(e.target); // Captura los datos del formulario
+  console.log("Datos enviados:", Object.fromEntries(formData.entries()));
 
   // Transformar datos específicos
   const nombre = formData.get("nombre")?.trim();
@@ -510,6 +356,7 @@ const mensajeErrorUsuario = document.querySelector(".errorUsuario");
       // Limpio formulario y cierro el modal
       formUsuario.reset();
       modalUsuarios.hide();
+      
   } catch (error) {
       console.error("Error en la solicitud:", error);
       alertify.error("Hubo un problema al realizar la operación. Intenta más tarde.");
@@ -641,153 +488,4 @@ document.addEventListener("seccionGestionUsuariosCargada", () => {
 
 });
 
-
-
-
-
-
-
-
-
-// fetch(url)
-//     .then((response) => response.json()) // Convertir la respuesta a JSON
-//     .then((data) => {
-//         // console.log(data);
-
-//     // Recorrer los datos usando forEach
-//     data.forEach((usuarios) => {
-//     const fila = document.createElement("tr");
-
-//      // Formatear la fecha a "día/mes/año"
-//      const fechaFormateada = new Date(usuarios.fecha_nacimiento).toLocaleDateString("es-ES", {
-//       day: "2-digit",
-//       month: "2-digit",
-//       year: "numeric",
-//   });
-
-
-//       // Crear columnas para cada dato
-//     fila.innerHTML = `
-//             <td>${usuarios.id_usuario}</td>
-//             <td>${usuarios.usuario}</td>
-//             <td>${usuarios.nombre}</td>
-//             <td>${usuarios.apellido}</td>
-//             <td>        
-//                 <img src="/uploads/${usuarios.imagen_perfil}" 
-//                     class="rounded"
-//                     alt="Imagen de perfil" 
-//                     width="100" 
-//                     height="100">
-//             </td>
-//             <td>${usuarios.nombre_rol}</td>
-//             <td>${usuarios.email}</td>
-//             <td>${fechaFormateada}</td>
-//             <td>${usuarios.nombre_genero}</td>
-//             <td>${usuarios.nombre_provincia}</td>
-//             <td class="text-center"><a class="btnEditar btn btn-outline-warning">Editar</a> <a class="btnBorrar btn btn-outline-danger">Borrar</a></td>
-//         `;
-
-//       // Añadir la fila a la tabla
-//     tablaCuerpo.appendChild(fila);
-//     });
-// })
-//     .catch((error) => console.error("Error al obtener los registros:", error));
-
-
-//cargar ptovincias
-// document.addEventListener("DOMContentLoaded", async () => {
-//   const provinciasSelect = document.querySelector("#provincias");
-
-//   try {
-//       // Solicitud al backend para obtener las provincias
-//       const response = await fetch("http://localhost:3000/provincias"); 
-//       const provincias = await response.json();
-
-//       // Rellenar el select con las provincias
-//       provincias.forEach(provincia => {
-//           const option = document.createElement("option");
-//           option.value = provincia.id_provincia; 
-//           option.textContent = provincia.nombre_provincia; // Nombre de la provincia
-//           provinciasSelect.appendChild(option);
-
-//       });
-//   } catch (error) {
-//       console.error("Error al cargar las provincias:", error);
-//   }
-// });
-
-// //cargar generos
-// document.addEventListener("DOMContentLoaded", async () => {
-//   const generosSelect = document.querySelector("#generos");
-
-//   try {
-//       const response = await fetch("http://localhost:3000/generos"); 
-//       const generos = await response.json();
-
-//       // Rellenar el select con los generos
-//       generos.forEach(genero => {
-//           const option = document.createElement("option");
-//           option.value = genero.id_genero;
-//           option.textContent = genero.nombre_genero; 
-//           generosSelect.appendChild(option);
-//       });
-//   } catch (error) {
-//       console.error("Error al cargar los generos:", error);
-//   }
-// });
-
-// //cargar roles
-// document.addEventListener("DOMContentLoaded", async () => {
-//   const rolesSelect = document.querySelector("#rol_usuario");
-
-//   try {
-//       const response = await fetch("http://localhost:3000/roles");
-//       const roles = await response.json();
-
-//       roles.forEach(roles => {
-//           const option =document.createElement("option");
-//           option.value = roles.id_rol;
-//           option.textContent = roles.nombre_rol;
-//           rolesSelect.appendChild(option);
-//       });
-//   } catch (error) {
-//       console.error("Error al cargar los roles", error);
-//   }
-// });
-
-
-
-    // Configura Alertify para ocultar el encabezado
-  //   alertify.defaults.glossary.title = ''; // Título vacío, elimina el encabezado
-
-  //   alertify.confirm("¿Está seguro de editar el usuario?.",
-  //     function(){
-  //       fetch(url+id,{
-  //         method: 'DELETE'
-  //       })
-  //       .then(res => {
-  //         if (!res.ok) throw new Error("Error al editar el usuario.");
-  //         return res.json();
-  //     })
-  
-  //     // .then(() => location.reload())
-  //     .then(() => { 
-  //       fila.remove();// Elimina la fila sin recargar la página
-  //   alertify.alert("Usuario editado.", function(){
-  //   alertify.message('OK');
-  // });
-
-  //     })
-      
-  //     .catch(error => {
-  //       console.error("Error durante la edición:", error);
-  //       alertify.error("Hubo un problema al intentar editar el usuario."); // Mostrar el mensaje de error SOLO si hay un problema
-  //   });
-
-  
-  //    // alertify.success('Ok')
-  //     },
-  //     function(){
-  //       alertify.error('Cancel')
-  //     });
 
