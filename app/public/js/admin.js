@@ -212,6 +212,7 @@ document.querySelector(".btn-log-out").addEventListener("click",() =>{
                 // Ejecutar la función de carga solo si existe
                 if (modulo && typeof modulo[funcionCarga] === "function") {
                     modulo[funcionCarga]();
+                    
                 } else {
                     console.error(`La función ${funcionCarga} no se pudo ejecutar.`);
                 }

@@ -70,20 +70,6 @@ const modalUsuarios = new bootstrap.Modal(document.getElementById('modalUsuario'
 });
 
 
-// modalUsuarios._element.addEventListener("show.bs.modal", () => {
-
-//   modalUsuarios._element.removeAttribute("inert"); // Quitar inert cuando se muestra el modal
-// });
-
-
-// // Evento para cuando el modal se oculta
-// modalUsuarios._element.addEventListener("hide.bs.modal", () => {
-//   setTimeout(() => {
-//       if(btnAgregarUsuarios) btnAgregarUsuarios.focus(); // Mueve el foco fuera del modal
-//       modalUsuarios._element.setAttribute("inert", ""); // Agregar inert al cerrar el modal
-//   }, 10);
-// });
-
 modalUsuarios._element.addEventListener("show.bs.modal", () => {
   // Cuando el modal se muestra, eliminamos 'inert' para que sea accesible e interactuable
   modalUsuarios._element.removeAttribute("inert");
@@ -163,6 +149,12 @@ export const cargarUsuarios = async () => {
       console.error("Error: Elementos requeridos para registrar eventos no encontrados.");
       return;
   }
+  // Validación de eventos duplicados en tablaUsuarios
+  if (tablaUsuarios.dataset.eventRegistered) {
+    console.log("Eventos ya registrados en tablaUsuarios. No se duplicarán.");
+    return;
+}
+  
 
   // Evento para "Agregar Usuario"
   if (btnAgregarUsuarios) {
@@ -185,11 +177,7 @@ export const cargarUsuarios = async () => {
       accionFormUsuario = "crear"; // Marca la acción como "crear"
   });
 
-  // Validación de eventos duplicados en tablaUsuarios
-  if (tablaUsuarios.dataset.eventRegistered) {
-      console.log("Eventos ya registrados en tablaUsuarios. No se duplicarán.");
-      return;
-  }
+  
   }
 
 
@@ -225,11 +213,7 @@ export const cargarUsuarios = async () => {
         document.getElementById("provincias").value = "";
         document.getElementById("fechaNac").value = "";
 
-        // console.log("Seleccionando inputs:");
-        // console.log("Usuario:", document.getElementById("user"));
-        // console.log("Nombre:", document.getElementById("name"));
-        // console.log("Apellido:", document.getElementById("lastname"));
-        // console.log("Email:", document.getElementById("email"));
+       
           // Asigna los valores
           document.getElementById("user").value = fila.children[1].innerHTML;
           document.getElementById("name").value = fila.children[2].innerHTML;
@@ -643,7 +627,11 @@ document.querySelector("#email").addEventListener("input", function(event) {
     .map(palabra => palabra.charAt(0).toUpperCase() + palabra.slice(1).toLowerCase())//primera letra en mayuscula
     .join(" ");//Unir las palabras con espacios
 }
-document.addEventListener("DOMContentLoaded", () => {
+// document.addEventListener("DOMContentLoaded", () => {
+//   console.log("Página cargada");
+//   cargarUsuarios();
+// });
+window.addEventListener("load", () => {
   console.log("Página cargada");
   cargarUsuarios();
 });
@@ -803,17 +791,3 @@ document.addEventListener("seccionGestionUsuariosCargada", () => {
   //       alertify.error('Cancel')
   //     });
 
-
-  
-  // // Permito que el usuario vuelva a seleccionar la imagen actual
-    // const btnResetImg = document.querySelector("#btnResetImg");
-    // if(btnResetImg) {
-    //   btnResetImg.addEventListener("click", () => {
-    //     imgPreview.src = imagenSrc; //restaura imagen original
-    //   })
-    // }
-    // Mostrar información del archivo
-    // const fileInfo = document.querySelector("#file-info");
-    // if (fileInfo) {
-    //     fileInfo.textContent = `No se puede mostrar archivo debido a restricciones de seguridad.`;
-    // }

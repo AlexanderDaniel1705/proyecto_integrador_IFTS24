@@ -41,6 +41,15 @@
     background-color: #0fa1c5; 
     border-radius: 10px;
 }
+html, body {
+    height: 100%; /* Asegura que la página ocupe toda la ventana */
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+
 
 
 
@@ -333,7 +342,8 @@ button{
 }
 
 /*clientes*/
-.body-clientes {
+.body-galeria {
+    flex: 1; /* Hace que el contenido principal ocupe todo el espacio disponible */
     background: linear-gradient(rgba(75, 75, 112, 0.705), rgba(240, 240, 252, 0.705)),
     url(/images/clientes.jpg) center center no-repeat ;
     background-size: cover;
@@ -404,6 +414,26 @@ button{
     max-width: 600px;
 }
 
+.galeria-item {
+    text-align: center; /* Centra todos los elementos dentro del contenedor */
+    padding: 15px;
+}
+
+.galeria-usuario {
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-transform: uppercase; /* Convierte el texto a mayúsculas */
+}
+
+.galeria-comentario {
+    font-size: 18px;
+    font-weight: bold;
+    color: #4d4545;
+    margin-top: 10px;
+    font-style: italic;
+}
+
 /* #galeria .col-lg-4 {
     padding: 10px;
 }
@@ -438,12 +468,47 @@ button{
     
     color: #4d4545;
 }
-footer {
-    font-size: 20px;
-    width: 100%;
-    text-align: center;
+
+.img-galeria {
+    flex-grow: 1; /* Empuja el footer hacia abajo */
 }
 
+/* footer {
+    width: 100%;
+    text-align: center;
+    background-color: #f1f1f1;
+    padding: 10px;
+
+} */
+
+footer {
+    width: 100%;
+    /* background-color: #f1f1f1; */
+    padding: 10px;
+    
+    display: flex; /* Activa flexbox */
+    justify-content: space-between; /* Distribuye los elementos de forma uniforme */
+    align-items: center; /* Centra los elementos verticalmente */
+}
+
+footer .container {
+    width: 100%;
+    display: flex;
+    justify-content: space-between; /* Espacio uniforme entre los elementos */
+    align-items: center;
+}
+
+footer .row {
+    width: 100%;
+    display: flex;
+    justify-content: space-between; /* Asegura que los divs estén alineados correctamente */
+    align-items: center;
+}
+
+footer .col-4 {
+    flex: 1; /* Hace que cada columna ocupe un tercio del ancho */
+    text-align: center;
+}
 
 @media (max-width: 576px) { /* Móviles */
     .navbar { flex-direction: column; }
