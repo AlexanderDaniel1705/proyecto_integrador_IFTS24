@@ -125,6 +125,10 @@ app.get("/sucursales", (req, res) => {
   res.sendFile(path.join(__dirname, "views/sucursales.html"));
 });
 
+app.post("/auth/logout", (req, res) => {
+  res.clearCookie("jwt", { path: "/" }); // Elimina la cookie JWT
+  res.status(200).json({ mensaje: "Sesión cerrada correctamente" });
+});
 
 // const crypto = require('crypto');
 // const secretKey = crypto.randomBytes(64).toString('hex');

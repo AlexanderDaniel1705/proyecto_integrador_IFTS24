@@ -30,10 +30,13 @@ const verifyRole = (requiredRoles) => {
         requiredRoles = [requiredRoles]; 
       }
 
-      const roleMapping = {
-        1: "admin",
-        2: "usuario"
-      };
+     // Mapeo de roles: Convierte valores numéricos en nombres de roles legibles.
+    // Esto facilita la comparación de roles en la autenticación.
+        const roleMapping = {
+            1: "admin",  // El rol "1" representa un administrador.
+            2: "usuario" // El rol "2" representa un usuario estándar.
+        };
+  
       // Verificar si el usuario tiene uno de los roles permitidos
       
       if (!requiredRoles.includes(roleMapping[req.user.fk_rol])) { 

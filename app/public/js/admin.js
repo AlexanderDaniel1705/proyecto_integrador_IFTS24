@@ -1,8 +1,15 @@
-document.querySelector(".btn-log-out").addEventListener("click",() =>{
-    document.cookie='jwt=; Path=/ Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-    document.location.href = "/"
-})
-
+// document.querySelector(".btn-log-out").addEventListener("click",() =>{
+//     document.cookie='jwt=; Path=/ Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+//     document.location.href = "/"
+// })
+document.querySelector(".btn-log-out").addEventListener("click", () => {
+    fetch("/auth/logout", { method: "POST" })
+      .then(() => {
+        sessionStorage.clear(); // Borra también `sessionStorage`
+        document.location.href = "/"; // Redirige a la página principal
+      });
+  });
+  
 
 
         // -----------------------------------------------------
