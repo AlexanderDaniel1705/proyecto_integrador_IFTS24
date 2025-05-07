@@ -369,8 +369,8 @@ button{
 }
 
 .img-galeria .imgGal {
-    width: 100%;
-    height: 200px;
+    width: 80%;
+    height: 300px;
     cursor: pointer;
     transition: 1s;
     outline: 1px solid #fff;
@@ -415,6 +415,7 @@ button{
 }
 
 .galeria-item {
+
     text-align: center; /* Centra todos los elementos dentro del contenedor */
     padding: 15px;
 }
@@ -451,35 +452,27 @@ button{
 #galeria p {
     font-weight: bold;
 } */
-/*footer*/
-.pin  {
-    font-size: 1.2em;
-    margin-left: 2em;    
-}
-
-.pin1 {
-    color: #4d4545;  
-}
-.pin2{
-    
-    color:#4d4545;
-}
-.pin3{
-    
-    color: #4d4545;
-}
 
 .img-galeria {
     flex-grow: 1; /* Empuja el footer hacia abajo */
 }
 
-/* footer {
-    width: 100%;
-    text-align: center;
-    background-color: #f1f1f1;
-    padding: 10px;
+/*footer*/
 
-} */
+.pin {
+    font-size: 1.5em; /* Tamaño de íconos más grande */
+    margin-right: 1em;
+}
+
+.pin1, .pin2, .pin3 {
+    color: #4d4545; /* Mismo color para consistencia */
+    transition: color 0.3s; /* Efecto al pasar el mouse */
+}
+
+.pin1:hover, .pin2:hover, .pin3:hover {
+    color: #007bff; /* Cambia a un color azul claro */
+}
+
 
 footer {
     width: 100%;

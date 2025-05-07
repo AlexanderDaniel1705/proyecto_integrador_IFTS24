@@ -131,12 +131,13 @@ const login = (req, res) => {
           }
           // Generamos un token JWT para el usuario autenticado
           const token = jwt.sign({ id: user.id, usuario: user.usuario, fk_rol: user.fk_rol }, process.env.SECRET_KEY, {expiresIn:process.env.JWT_EXPIRATION});
+          console.log("Token generado:", token);
           const cookieOption = {
             expires: new Date(Date.now() + process.env.JWT_COOKIE_EXPIRES *24 *60 *60 *1000),
             path:"/"
           }
           res.cookie("jwt",token,cookieOption);
-
+          console.log(req.cookies)
           
           // Imprimir el token generado en la consola para depuración
           // console.log("Token generado para el usuario:", token);

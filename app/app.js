@@ -4,8 +4,9 @@ const express = require("express"); // Framework Express
 const path = require("path"); // Para manejar rutas
 const app = express(); // Inicializa la app Express
 const morgan = require("morgan");
-
-// const auth = require('./private/middleware/roles.middleware');
+const cookieParser = require("cookie-parser"); 
+app.use(cookieParser());
+const verifyRole = require('./private/middleware/authRole.middleware');
 
 //MIddlewares
 app.use(morgan("dev"));
@@ -87,7 +88,7 @@ app.get("/registro", (req, res) => {
   res.sendFile(path.join(__dirname, "views/registro.html"));
 });
 
-app.get("/admin", (req, res) => {
+app.get("/admin", verifyRole("admin"), (req, res) => {
   res.sendFile(path.join(__dirname, "views/admin/admin.html"));
 });
 
