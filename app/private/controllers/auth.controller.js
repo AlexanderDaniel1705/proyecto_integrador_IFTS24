@@ -1,11 +1,9 @@
 // Controlador para manejar la autenticación y registro de usuarios
 
-const jwt = require("jsonwebtoken"); // Requiere el módulo 'jsonwebtoken', que se utiliza para crear y verificar tokens JSON Web.
-const bcryptjs = require('bcryptjs'); // Requiere el módulo 'bcryptjs', que se utiliza para encriptar y comparar contraseñas.
-const db = require('../models/db'); // Requiere la configuración de la base de datos desde el archivo '../db/db'.
+const jwt = require("jsonwebtoken"); // Importo el módulo 'jsonwebtoken', que se utiliza para crear y verificar tokens JSON Web.
+const bcryptjs = require('bcryptjs'); // Importo el módulo 'bcryptjs', que se utiliza para encriptar y comparar contraseñas.
+const db = require('../models/db'); // Importo la configuración de la base de datos desde el archivo '../db/db'.
 const dotenv = require("dotenv");
-// const path = require("path"); // Requiere el módulo 'path', que proporciona utilidades para trabajar con rutas de archivos y directorios.
-
 dotenv.config();
 
 
@@ -95,89 +93,81 @@ const userExistQuery = `SELECT * FROM usuarios WHERE email = ? OR usuario = ?`;
   });
 };
 
-const login = (req, res) => {
-  const { usuario, contrasenia } = req.body; 
-  console.log(req.body);
-  // const password = req.body['contraseña'] || req.body['contraseÃ±a']; // Maneja posibles problemas de codificación
-  if (!usuario || !contrasenia) {
-    // console.error('Datos faltantes:', { usuario, contrasenia });
-      return res.status(400).json({ error: 'Los campos estan incompletos.' });   
-  };
+const login = (req, res) => {  
+  // Extraemos los datos enviados en el cuerpo de la solicitud
+  const { usuario, contrasenia } = req.body;   
+  console.log(req.body); // Mostramos los datos recibidos en la consola para depuración
+  
+  // Si falta el usuario o la contraseña, respondemos con un error 400
+  if (!usuario || !contrasenia) {   
+      return res.status(400).json({ error: 'Los campos están incompletos.' });    
+  }
 
-  // Consulta SQL para seleccionar el usuario con el usuario  proporcionado
-  db.query('SELECT * FROM usuarios WHERE usuario = ?', [usuario], (error, results) => {
-      if (error) {
-          // console.error('Error al iniciar sesión:', error);
-          return res.status(400).json({ error: 'Error durante la consulta.' });
+  // Consulta SQL para verificar si el usuario existe en la base de datos
+  db.query('SELECT * FROM usuarios WHERE usuario = ?', [usuario], (error, results) => {   
+      if (error) {   
+          return res.status(400).json({ error: 'Error durante la consulta.' });   
       }
-      if (results.length === 0) {
-      // console.log('No se encontró ningún usuario con el usuario:', usuario); 
-          return res.status(401).json({ error: 'Usuario y/o contraseña no válidas.' });
+
+      // Si no se encuentra el usuario, enviamos un error 401 (credenciales incorrectas)
+      if (results.length === 0) {    
+          return res.status(401).json({ error: 'Usuario y/o contraseña no válidas.' });    
       }
-      const user = results[0]; // Obtenemos el usuario del resultado de la consulta
-           // Validar la contraseña usando bcrypt
-          bcryptjs.compare(contrasenia, user.contrasenia, (err, isValidPassword) => {
-        
-          // console.log(user.contrasenia)
-          // console.log(contrasenia)
-          if (err) {
-              return res.status(500).json({ error: "Error interno del servidor. Intenta más tarde" });
-          }
-          // console.error("Error al verificar la contraseña:", err);
+      
+      // Guardamos el usuario obtenido de la consulta
+      const user = results[0];   
 
-          // console.log("Resultado de la comparación:", isValidPassword);
-          if (!isValidPassword) {
-              return res.status(401).json({ error: "Usuario y/o contraseña no válidas." });
+      // Validamos la contraseña ingresada comparándola con la almacenada en la base de datos
+      bcryptjs.compare(contrasenia, user.contrasenia, (err, isValidPassword) => {   
+          if (err) {   
+              return res.status(500).json({ error: "Error interno del servidor. Intenta más tarde" });    
           }
-          // Generamos un token JWT para el usuario autenticado
-          const token = jwt.sign({ id: user.id, usuario: user.usuario, fk_rol: user.fk_rol }, process.env.SECRET_KEY, {expiresIn:process.env.JWT_EXPIRATION});
-          console.log("Token generado:", token);
-          const cookieOption = {
-            expires: new Date(Date.now() + process.env.JWT_COOKIE_EXPIRES *24 *60 *60 *1000),
-            path:"/"
-          }
-          res.cookie("jwt",token,cookieOption);
-          console.log(req.cookies)
-          
-          // Imprimir el token generado en la consola para depuración
-          // console.log("Token generado para el usuario:", token);
 
-            // Verificar el rol del usuario para definir la redirección
-      // if (user.fk_rol === 1) { // Si es admin
-      //   return res.json({ 
-      //     message: 'Inicio de sesión exitoso', 
-      //     auth: true, 
-      //     token, 
-      //     redirect: "/admin" 
-      //   });
-      // } else { // Para otros roles puedes definir otra ruta o mostrar un error
-      //   return res.json({ 
-      //     message: 'Inicio de sesión exitoso', 
-      //     auth: true, 
-      //     token, 
-      //     redirect: "/" 
-      //   });
-      // }
-    
-          const redirectUrl = user.fk_rol === 1 ? "/admin" : "/dashboard";
-          // URL de la imagen de perfil (esto debe ser relativo a donde se sirven las imágenes)
+          // Si la contraseña no es válida, respondemos con error 401
+          if (!isValidPassword) {   
+              return res.status(401).json({ error: "Usuario y/o contraseña no válidas." });   
+          }
+
+          // Generamos un token JWT con la información del usuario
+          const token = jwt.sign({ 
+              id: user.id, 
+              usuario: user.usuario, 
+              fk_rol: user.fk_rol 
+          }, process.env.SECRET_KEY, { expiresIn: process.env.JWT_EXPIRATION });
+
+          console.log("Token generado:", token); // Mostramos el token en la consola
+
+          // Configuración de la cookie JWT para almacenar el token en el cliente
+          const cookieOption = {    
+            expires: new Date(Date.now() + process.env.JWT_COOKIE_EXPIRES * 24 * 60 * 60 * 1000), // Define la expiración
+            path: "/"  // Aplica la cookie en toda la aplicación
+          };
+
+          res.cookie("jwt", token, cookieOption); // Envía la cookie al navegador
+
+          console.log(req.cookies); // Muestra las cookies en la consola para verificar el almacenamiento
+
+          // Definimos la URL de redirección según el rol del usuario
+          const redirectUrl = user.fk_rol === 1 ? "/admin" : "/dashboard";  
+
+          // Definimos la URL de la imagen de perfil del usuario (si existe)
           const imageUrl = user.imagen_perfil ? `http://localhost:3000/uploads/${user.imagen_perfil}` : null;
 
-          res.json({ message: 'Inicio de sesión exitoso',
-            auth: true ,
-            token,
-            redirect:redirectUrl,
-            user: { // Aca estamos incluyendo los datos del usuario
-              usuario: user.usuario,
-              email: user.email,
-              imageUrl 
-            }
-          });
-      });
-      
-  });
+          // Enviamos la respuesta JSON con la información del usuario y el token
+          res.json({ 
+            message: 'Inicio de sesión exitoso',    
+            auth: true,    
+            token,    
+            redirect: redirectUrl,    
+            user: { //Estructuro Datos del usuario para el frontend    
+              usuario: user.usuario,    
+              email: user.email,    
+              imageUrl    
+            }    
+          });    
+      });    
+  });    
 };
-
 
 
 module.exports = { register, login };

@@ -258,6 +258,11 @@ main.min-main{
     margin-left: 80px;
 }
 
+#main-content h1 {
+    font-size: 2rem;
+    text-align: center;
+    color: azure;
+}
 /*---------------- Responsive ---------------*/
 
 @media (max-height:660px){

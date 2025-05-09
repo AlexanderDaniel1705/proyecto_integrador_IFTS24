@@ -86,7 +86,8 @@ modalUsuarios._element.addEventListener("hide.bs.modal", () => {
 
 
 
-
+console.log(document.querySelector("#tablaUsuarios")); // Verifica si el elemento de la tabla existe
+console.log(document.querySelector("#tablaUsuarios").innerHTML); // Revisa si la tabla se está llenando correctamente
 
   // Función para cargar la galería desde el servidor
 export const cargarUsuarios = async () => {
@@ -104,7 +105,7 @@ export const cargarUsuarios = async () => {
 
       tablaCuerpoUsuarios.innerHTML = ""; // Limpiar la tabla antes de llenarla
 
-      dataUsuarios.forEach((usuarios) => {
+      dataUsuarios.forEach((usuarios, index) => {
         console.log("Datos de los usuarios cargados:", dataUsuarios);
           const filaUsuarios = document.createElement("tr");
 
@@ -115,6 +116,7 @@ export const cargarUsuarios = async () => {
           });
 
           filaUsuarios.innerHTML = `
+              <td>${index + 1}</td> <!-- Número de fila -->
               <td>${usuarios.id_usuario}</td>
               <td>${usuarios.usuario}</td>
               <td>${usuarios.nombre}</td>
@@ -132,6 +134,7 @@ export const cargarUsuarios = async () => {
 
           tablaCuerpoUsuarios.appendChild(filaUsuarios);
       });
+      
       
   } catch (error) {
       console.error("Error al cargar los usuarios:", error);
@@ -195,14 +198,14 @@ export const cargarUsuarios = async () => {
       }
     // console.log("Fila seleccionada:", fila);
         console.log("Datos de la fila seleccionada:");
-        console.log("ID:", fila.children[0]?.innerHTML);
-        console.log("Usuario:", fila.children[1]?.innerHTML);
-        console.log("Nombre:", fila.children[2]?.innerHTML);
-        console.log("Apellido:", fila.children[3]?.innerHTML);
+        console.log("ID:", fila.children[1]?.innerHTML);
+        console.log("Usuario:", fila.children[2]?.innerHTML);
+        console.log("Nombre:", fila.children[3]?.innerHTML);
+        console.log("Apellido:", fila.children[4]?.innerHTML);
 
       
           // Obtén valores de la fila
-          idFormUsuario = fila.children[0].innerHTML;
+          idFormUsuario = fila.children[1].innerHTML;
 
           // Limpia manualmente el formulario
         document.getElementById("user").value = "";
@@ -223,7 +226,7 @@ export const cargarUsuarios = async () => {
           
           const imgPreview = document.querySelector("#img-preview");
           if (imgPreview) {
-              imgPreview.src = fila.children[4].querySelector("img").src;
+              imgPreview.src = fila.children[5].querySelector("img").src;
               imgPreview.style.display = "block";
           }
 
@@ -234,17 +237,17 @@ export const cargarUsuarios = async () => {
             await cargarProvincias();
         
             const rolId = Array.from(document.getElementById("rol_usuario").options).find(
-                option => option.textContent === fila.children[5]?.innerHTML
+                option => option.textContent === fila.children[6]?.innerHTML
             )?.value;
             document.getElementById("rol_usuario").value = rolId || "";
         
             const generoId = Array.from(document.getElementById("generos").options).find(
-                option => option.textContent === fila.children[8]?.innerHTML
+                option => option.textContent === fila.children[9]?.innerHTML
             )?.value;
             document.getElementById("generos").value = generoId || "";
         
             const provinciaId = Array.from(document.getElementById("provincias").options).find(
-                option => option.textContent === fila.children[9]?.innerHTML
+                option => option.textContent === fila.children[10]?.innerHTML
             )?.value;
             document.getElementById("provincias").value = provinciaId || "";
         } catch (error) {
@@ -252,7 +255,7 @@ export const cargarUsuarios = async () => {
         }
 
           // Formatea la fecha antes de asignarla
-          const [day, month, year] = fila.children[7].innerHTML.split("/");
+          const [day, month, year] = fila.children[8].innerHTML.split("/");
           const formattedDate = `${year}-${month}-${day}`;
           document.getElementById("fechaNac").value = formattedDate;
     
@@ -263,7 +266,7 @@ export const cargarUsuarios = async () => {
       // Evento para "Borrar Usuario"
       else if (e.target.classList.contains("btnBorrar")) {
         const fila = e.target.closest("tr");
-          const id = fila.children[0].innerHTML;
+          const id = fila.children[1].innerHTML;
           alertify.confirm("¿Está seguro de eliminar el usuario?", async () => {
               try {
                   const response = await fetch(url + id, { method: 'DELETE' });

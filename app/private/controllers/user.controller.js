@@ -72,7 +72,8 @@ WHERE usuarios.id_usuario = ?`;
 const enviarEmail = require("../services/emailService");
 
 const storeUser = async (req, res) => {
-    let imageName = "";
+    let imageName = req.file ? req.file.filename : "/images/default.png";
+
     if (req.file) {
         imageName = req.file.filename;
     }
@@ -124,46 +125,55 @@ const storeUser = async (req, res) => {
     });
 };
 
-// Actualizar un usuario existente
+// Función para actualizar un usuario existente en la base de datos
 const updateUser = (req, res) => {
-    const { id } = req.params;//obtengo el id del usuario desde los parámetros
-    const imageName = req.file ? req.file.filename : null; // Solo usa una nueva imagen si se sube una
+    // Extraemos el ID del usuario desde los parámetros de la solicitud
+    const { id } = req.params; 
 
-    
-    //extraer los datos del cuerpo de la solicitud
-    const { usuario, nombre, apellido, fk_rol, email, fecha_nacimiento, fk_genero, fk_provincia} = req.body;
-    //validar q todos los campos esten presentes
-    if (!usuario || !nombre ||!apellido || !fk_rol || !email || !fecha_nacimiento || !fk_genero || !fk_provincia){
-        console.log(req.body);
-        
-        return res.status(400).json({mensaje: "Todos los campos son requeridos"})
+    // Si se sube un archivo, se usa su nombre; de lo contrario, se deja como "null"
+    const imageName = req.file ? req.file.filename : null; 
+
+    // Extraemos los datos enviados en el cuerpo de la solicitud
+    const { usuario, nombre, apellido, fk_rol, email, fecha_nacimiento, fk_genero, fk_provincia } = req.body; 
+
+    // Verificamos que todos los campos requeridos estén presentes
+    if (!usuario || !nombre || !apellido || !fk_rol || !email || !fecha_nacimiento || !fk_genero || !fk_provincia) {
+        console.log(req.body); // Muestra en la consola los datos recibidos para depuración
+        return res.status(400).json({ mensaje: "Todos los campos son requeridos" }); // Envía un error si falta algún campo
     }
 
-    // Si no se sube una nueva imagen, obtener la actual de la base de datos
-    const selectQuery = "SELECT imagen_perfil FROM usuarios WHERE id_usuario = ?";
+    // Consulta SQL para obtener la imagen de perfil actual del usuario
+    const selectQuery = "SELECT imagen_perfil FROM usuarios WHERE id_usuario = ?"; 
+    
+    // Ejecutamos la consulta para recuperar la imagen existente
     db.query(selectQuery, [id], (err, result) => {
+        // Si hay un error o el usuario no existe, devolvemos un mensaje de error
         if (err || result.length === 0) {
             console.error("Error al buscar la imagen existente:", err);
             return res.status(500).json({ error: "Error al buscar la imagen." });
         }
 
-        const currentImage = result[0].imagen_perfil;
-        const finalImage = imageName || currentImage; //  Si no hay nueva imagen, mantener la anterior
+        // Extraemos la imagen actual del usuario y definimos cuál se usará finalmente
+        const currentImage = result[0].imagen_perfil; 
+        const finalImage = imageName || currentImage; // Si no hay nueva imagen, mantenemos la anterior
 
-    
-    //consulta sql para actualizar
-    const query = 'UPDATE usuarios SET usuario = ?, nombre = ?, apellido = ?, imagen_perfil = ?, fk_rol = ?,  email = ?, fecha_nacimiento = ?, fk_genero = ?, fk_provincia = ? WHERE id_usuario = ?';
-    //valores a actualizar en la bbdd, en un array
-    const values = [usuario,nombre,apellido,finalImage,fk_rol,email,fecha_nacimiento,fk_genero,fk_provincia, id];
-    //ejecutar la consulta sql
-    db.query(query, values, (error) => {
-        if (error) {
-            return res.status(500).json({ error: 'Error al actualizar el usuario' });
-        }
-        //resouesta exitosa
-        res.json({ message: 'Usuario actualizado exitosamente' });
+        // Consulta SQL para actualizar la información del usuario en la base de datos
+        const query = 'UPDATE usuarios SET usuario = ?, nombre = ?, apellido = ?, imagen_perfil = ?, fk_rol = ?, email = ?, fecha_nacimiento = ?, fk_genero = ?, fk_provincia = ? WHERE id_usuario = ?';
+
+        // Definimos los valores a actualizar en la base de datos
+        const values = [usuario, nombre, apellido, finalImage, fk_rol, email, fecha_nacimiento, fk_genero, fk_provincia, id];
+
+        // Ejecutamos la consulta para actualizar los datos
+        db.query(query, values, (error) => {
+            // Si hay un error al actualizar, enviamos una respuesta con código 500
+            if (error) {
+                return res.status(500).json({ error: 'Error al actualizar el usuario' });
+            }
+
+            // Si la actualización es exitosa, enviamos una respuesta con mensaje de éxito
+            res.json({ message: 'Usuario actualizado exitosamente' });
+        });
     });
-});
 };
 
 const patchUser =  (req,res) => {
