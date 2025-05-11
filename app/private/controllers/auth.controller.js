@@ -123,6 +123,11 @@ const login = (req, res) => {
               return res.status(500).json({ error: "Error interno del servidor. Intenta más tarde" });    
           }
 
+            // Si el usuario tiene una contraseña temporal, permitir el acceso directamente
+        if (!isValidPassword && user.debe_cambiar_contrasenia) {    
+          isValidPassword = contrasenia === user.contrasenia; // Comparación directa de la provisoria
+      }
+
           // Si la contraseña no es válida, respondemos con error 401
           if (!isValidPassword) {   
               return res.status(401).json({ error: "Usuario y/o contraseña no válidas." });   
@@ -148,7 +153,10 @@ const login = (req, res) => {
           console.log(req.cookies); // Muestra las cookies en la consola para verificar el almacenamiento
 
           // Definimos la URL de redirección según el rol del usuario
-          const redirectUrl = user.fk_rol === 1 ? "/admin" : "/dashboard";  
+          // const redirectUrl = user.fk_rol === 1 ? "/admin" : "/dashboard";  
+          const redirectUrl = user.debe_cambiar_contrasenia ? "/cambiar-contrasenia" : (user.fk_rol === 1 ? "/admin" : "/dashboard");  
+
+
 
           // Definimos la URL de la imagen de perfil del usuario (si existe)
           const imageUrl = user.imagen_perfil ? `http://localhost:3000/uploads/${user.imagen_perfil}` : null;

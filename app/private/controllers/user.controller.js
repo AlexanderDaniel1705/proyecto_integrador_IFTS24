@@ -118,8 +118,11 @@ const storeUser = async (req, res) => {
                 await enviarEmail(usuario, email, contraseñaTemporal); // Enviar el correo electrónico
                 res.status(201).json({ mensaje: "Usuario creado exitosamente y correo enviado." });
             } catch (emailError) {
-                console.error("Error al enviar correo", emailError);
-                res.status(500).json({ error: "Usuario creado pero no se pudo enviar el correo." });
+                console.error(`Error al enviar correo →`, emailError.message);
+                return res.status(500).json({ 
+                    error: `Usuario creado pero no se pudo enviar el correo. Detalles: ${emailError.message}` 
+                });
+            
             }
         });
     });

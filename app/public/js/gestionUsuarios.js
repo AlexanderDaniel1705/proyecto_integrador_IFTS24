@@ -179,6 +179,7 @@ export const cargarUsuarios = async () => {
 
       modalUsuarios.show(); // Abre el modal para crear usuario
       accionFormUsuario = "crear"; // Marca la acción como "crear"
+      
   });
 
   
@@ -222,7 +223,7 @@ export const cargarUsuarios = async () => {
           document.getElementById("user").value = fila.children[1].innerHTML;
           document.getElementById("name").value = fila.children[2].innerHTML;
           document.getElementById("lastname").value = fila.children[3].innerHTML;
-          document.getElementById("email").value = fila.children[6].innerHTML;
+          document.getElementById("email").value = fila.children[7].innerHTML;
           
           const imgPreview = document.querySelector("#img-preview");
           if (imgPreview) {
@@ -261,6 +262,7 @@ export const cargarUsuarios = async () => {
     
           accionFormUsuario = "editar"; // Marca la acción como "editar"
           modalUsuarios.show();
+          
       }
 
       // Evento para "Borrar Usuario"
@@ -481,10 +483,10 @@ document.querySelector("#email").addEventListener("input", function(event) {
 //   console.log("Página cargada");
 //   cargarUsuarios();
 // });
-window.addEventListener("load", () => {
-  console.log("Página cargada");
-  cargarUsuarios();
-});
+// window.addEventListener("load", () => {
+//   console.log("Página cargada");
+//   cargarUsuarios();
+// });
 // Escucha el evento personalizado disparado desde admin.js
 document.addEventListener("seccionGestionUsuariosCargada", () => {
   console.log("Sección de gestión de usuarios cargada. Ejecutando inicializaciones...");
