@@ -3,7 +3,31 @@ const url = "http://localhost:3000/user/"
 // const tablaCuerpo = document.querySelector("#tablaUsuarios");
 let accionFormUsuario = '';
 let idFormUsuario = 0; 
-const formUsuario = document.querySelector("form");
+const formUsuario = document.getElementById("register-form");
+// Inicializa modalUsuarios como constante al cargar el DOM
+const modalUsuarios = new bootstrap.Modal(document.getElementById('modalUsuario'), {
+    backdrop: 'static', // Desactiva el cierre del modal con click fuera del modal
+    keyboard: false     // Desactiva el cierre del modal con la tecla ESC
+});
+
+
+modalUsuarios._element.addEventListener("show.bs.modal", () => {
+  // Cuando el modal se muestra, eliminamos 'inert' para que sea accesible e interactuable
+  modalUsuarios._element.removeAttribute("inert");
+});
+
+modalUsuarios._element.addEventListener("hide.bs.modal", () => {
+  
+  setTimeout(() => {
+    // if (btnAgregarUsuarios) btnAgregarUsuarios.focus(); // Mueve el foco fuera del modal
+    const btnAgregarUsuariosActual = document.querySelector("#btnAgregarUsuarios");
+    if (btnAgregarUsuariosActual) btnAgregarUsuariosActual.focus();
+
+    // Cuando el modal se oculta, agregamos 'inert' para desactivar la interactividad
+    modalUsuarios._element.setAttribute("inert", ""); 
+  }, 10);
+});
+
 
 const cargarRoles = async () => {
   // console.log("cargarRoles se ejecuta"); // Depuración
@@ -63,33 +87,33 @@ const cargarProvincias = async () => {
   }
 };
 
-// Inicializa modalUsuarios como constante al cargar el DOM
-const modalUsuarios = new bootstrap.Modal(document.getElementById('modalUsuario'), {
-    backdrop: 'static', // Desactiva el cierre del modal con click fuera del modal
-    keyboard: false     // Desactiva el cierre del modal con la tecla ESC
-});
+// // Inicializa modalUsuarios como constante al cargar el DOM
+// const modalUsuarios = new bootstrap.Modal(document.getElementById('modalUsuario'), {
+//     backdrop: 'static', // Desactiva el cierre del modal con click fuera del modal
+//     keyboard: false     // Desactiva el cierre del modal con la tecla ESC
+// });
 
 
-modalUsuarios._element.addEventListener("show.bs.modal", () => {
-  // Cuando el modal se muestra, eliminamos 'inert' para que sea accesible e interactuable
-  modalUsuarios._element.removeAttribute("inert");
-});
+// modalUsuarios._element.addEventListener("show.bs.modal", () => {
+//   // Cuando el modal se muestra, eliminamos 'inert' para que sea accesible e interactuable
+//   modalUsuarios._element.removeAttribute("inert");
+// });
 
-modalUsuarios._element.addEventListener("hide.bs.modal", () => {
-  setTimeout(() => {
-    if (btnAgregarUsuarios) btnAgregarUsuarios.focus(); // Mueve el foco fuera del modal
+// modalUsuarios._element.addEventListener("hide.bs.modal", () => {
+//   setTimeout(() => {
+//     if (btnAgregarUsuarios) btnAgregarUsuarios.focus(); // Mueve el foco fuera del modal
 
-    // Cuando el modal se oculta, agregamos 'inert' para desactivar la interactividad
-    modalUsuarios._element.setAttribute("inert", ""); 
-  }, 10);
-});
+//     // Cuando el modal se oculta, agregamos 'inert' para desactivar la interactividad
+//     modalUsuarios._element.setAttribute("inert", ""); 
+//   }, 10);
+// });
 
 
 
-console.log(document.querySelector("#tablaUsuarios")); // Verifica si el elemento de la tabla existe
-console.log(document.querySelector("#tablaUsuarios").innerHTML); // Revisa si la tabla se está llenando correctamente
+// console.log(document.querySelector("#tablaUsuarios")); // Verifica si el elemento de la tabla existe
+// console.log(document.querySelector("#tablaUsuarios").innerHTML); // Revisa si la tabla se está llenando correctamente
 
-  // Función para cargar la galería desde el servidor
+  // Función para cargar la tabla usuarios desde el servidor
 export const cargarUsuarios = async () => {
   console.log("Recargando datos de los usuarios desde la API...");
 
@@ -104,9 +128,9 @@ export const cargarUsuarios = async () => {
       const dataUsuarios = await response.json();
 
       tablaCuerpoUsuarios.innerHTML = ""; // Limpiar la tabla antes de llenarla
+      console.log("Datos de los usuarios cargados:", dataUsuarios);
 
       dataUsuarios.forEach((usuarios, index) => {
-        console.log("Datos de los usuarios cargados:", dataUsuarios);
           const filaUsuarios = document.createElement("tr");
 
           const fechaFormateada = new Date(usuarios.fecha_nacimiento).toLocaleDateString("es-ES", {
@@ -190,6 +214,15 @@ export const cargarUsuarios = async () => {
 
       // Evento para "Editar Usuario"
       if (e.target.classList.contains("btnEditar")) {
+        //  // Limpia manualmente el formulario
+        //  document.getElementById("user").value = "";
+        //  document.getElementById("name").value = "";
+        //  document.getElementById("lastname").value = "";
+        //  document.getElementById("email").value = "";
+        //  document.getElementById("rol_usuario").value = "";
+        //  document.getElementById("generos").value = "";
+        //  document.getElementById("provincias").value = "";
+        //  document.getElementById("fechaNac").value = "";
       const fila = e.target.closest("tr");
           console.log("Botón Editar presionado en fila:", fila.children[0].innerHTML);
         // Validar si una fila fue seleccionada correctamente
@@ -197,6 +230,9 @@ export const cargarUsuarios = async () => {
         console.error("Error: No se pudo encontrar la fila correspondiente.");
         return;
       }
+        // Limpia el formulario
+  
+    if (formUsuario) formUsuario.reset();
     // console.log("Fila seleccionada:", fila);
         console.log("Datos de la fila seleccionada:");
         console.log("ID:", fila.children[1]?.innerHTML);
@@ -208,21 +244,13 @@ export const cargarUsuarios = async () => {
           // Obtén valores de la fila
           idFormUsuario = fila.children[1].innerHTML;
 
-          // Limpia manualmente el formulario
-        document.getElementById("user").value = "";
-        document.getElementById("name").value = "";
-        document.getElementById("lastname").value = "";
-        document.getElementById("email").value = "";
-        document.getElementById("rol_usuario").value = "";
-        document.getElementById("generos").value = "";
-        document.getElementById("provincias").value = "";
-        document.getElementById("fechaNac").value = "";
+         
 
        
           // Asigna los valores
-          document.getElementById("user").value = fila.children[1].innerHTML;
-          document.getElementById("name").value = fila.children[2].innerHTML;
-          document.getElementById("lastname").value = fila.children[3].innerHTML;
+          document.getElementById("user").value = fila.children[2].innerHTML;
+          document.getElementById("name").value = fila.children[3].innerHTML;
+          document.getElementById("lastname").value = fila.children[4].innerHTML;
           document.getElementById("email").value = fila.children[7].innerHTML;
           
           const imgPreview = document.querySelector("#img-preview");
@@ -233,6 +261,16 @@ export const cargarUsuarios = async () => {
 
           // Carga valores dinámicos para selects
           try {
+            const selectRol = document.getElementById("rol_usuario");
+            const selectGenero = document.getElementById("generos");
+            const selectProvincia = document.getElementById("provincias");
+        
+            // Limpiar opciones previas para evitar duplicados
+            selectRol.innerHTML = "";
+            selectGenero.innerHTML = "";
+            selectProvincia.innerHTML = "";
+        
+        
             await cargarRoles();
             await cargarGeneros();
             await cargarProvincias();
@@ -240,17 +278,17 @@ export const cargarUsuarios = async () => {
             const rolId = Array.from(document.getElementById("rol_usuario").options).find(
                 option => option.textContent === fila.children[6]?.innerHTML
             )?.value;
-            document.getElementById("rol_usuario").value = rolId || "";
+            selectRol.value = rolId || "";
         
             const generoId = Array.from(document.getElementById("generos").options).find(
                 option => option.textContent === fila.children[9]?.innerHTML
             )?.value;
-            document.getElementById("generos").value = generoId || "";
+            selectGenero.value = generoId || "";
         
             const provinciaId = Array.from(document.getElementById("provincias").options).find(
                 option => option.textContent === fila.children[10]?.innerHTML
             )?.value;
-            document.getElementById("provincias").value = provinciaId || "";
+            selectProvincia.value = provinciaId || "";
         } catch (error) {
             console.error("Error al cargar selects dinámicos:", error);
         }
@@ -261,6 +299,7 @@ export const cargarUsuarios = async () => {
           document.getElementById("fechaNac").value = formattedDate;
     
           accionFormUsuario = "editar"; // Marca la acción como "editar"
+          console.log("Mostrando el modal de edición...");
           modalUsuarios.show();
           
       }
@@ -355,6 +394,7 @@ const mensajeErrorUsuario = document.querySelector(".errorUsuario");
       // Notificar éxito
       alertify.alert(accionFormUsuario === 'crear' ? "Usuario registrado exitosamente." : "Usuario actualizado correctamente.", function(){
           alertify.message('OK');
+          cargarUsuarios();
         });
      
       

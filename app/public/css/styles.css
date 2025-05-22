@@ -369,8 +369,9 @@ button{
 }
 
 .img-galeria .imgGal {
-    width: 80%;
+    width: 90%;
     height: 300px;
+    border-radius: 10px;
     cursor: pointer;
     transition: 1s;
     outline: 1px solid #fff;

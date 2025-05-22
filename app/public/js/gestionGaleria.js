@@ -131,6 +131,8 @@ const registrarEventosGaleria = () => {
      
                  if (fkUserInput && comentarioInput) {
                     fkUserInput.value = filaGaleria.children[1]?.getAttribute("data-id"); //Captura el ID
+                    fkUserInput.readOnly = true;
+
         console.log("ID de usuario capturado:", fkUserInput.value); // Verificar en consola
     
                     //  fkUserInput.value = filaGaleria.children[1].getAttribute("data-id"); // Obtiene el ID
@@ -240,6 +242,7 @@ formGaleria.addEventListener('submit', async (e) => {
         // Muestra un mensaje de éxito y cierra el modal
         alertify.alert(accionFormGal === 'crear' ? "Galería creada exitosamente." : "Galería actualizada correctamente.", () => {
             alertify.message('OK');
+            cargarGaleria();
         });
         // Limpio formulario y cierro el modal
       formGaleria.reset();
