@@ -17,17 +17,15 @@ modalUsuarios._element.addEventListener("show.bs.modal", () => {
 });
 
 modalUsuarios._element.addEventListener("hide.bs.modal", () => {
-  
+  const btnAgregarUsuariosFocus = document.querySelector("#btnAgregarUsuarios");
+
   setTimeout(() => {
-    // if (btnAgregarUsuarios) btnAgregarUsuarios.focus(); // Mueve el foco fuera del modal
-    const btnAgregarUsuariosActual = document.querySelector("#btnAgregarUsuarios");
-    if (btnAgregarUsuariosActual) btnAgregarUsuariosActual.focus();
+    if (btnAgregarUsuariosFocus) btnAgregarUsuariosFocus.focus(); // Mueve el foco fuera del modal
 
     // Cuando el modal se oculta, agregamos 'inert' para desactivar la interactividad
     modalUsuarios._element.setAttribute("inert", ""); 
   }, 10);
 });
-
 
 const cargarRoles = async () => {
   // console.log("cargarRoles se ejecuta"); // Depuración
@@ -86,28 +84,6 @@ const cargarProvincias = async () => {
       console.error("Error al cargar las provincias:", error);
   }
 };
-
-// // Inicializa modalUsuarios como constante al cargar el DOM
-// const modalUsuarios = new bootstrap.Modal(document.getElementById('modalUsuario'), {
-//     backdrop: 'static', // Desactiva el cierre del modal con click fuera del modal
-//     keyboard: false     // Desactiva el cierre del modal con la tecla ESC
-// });
-
-
-// modalUsuarios._element.addEventListener("show.bs.modal", () => {
-//   // Cuando el modal se muestra, eliminamos 'inert' para que sea accesible e interactuable
-//   modalUsuarios._element.removeAttribute("inert");
-// });
-
-// modalUsuarios._element.addEventListener("hide.bs.modal", () => {
-//   setTimeout(() => {
-//     if (btnAgregarUsuarios) btnAgregarUsuarios.focus(); // Mueve el foco fuera del modal
-
-//     // Cuando el modal se oculta, agregamos 'inert' para desactivar la interactividad
-//     modalUsuarios._element.setAttribute("inert", ""); 
-//   }, 10);
-// });
-
 
 
 // console.log(document.querySelector("#tablaUsuarios")); // Verifica si el elemento de la tabla existe
@@ -171,7 +147,6 @@ export const cargarUsuarios = async () => {
   console.log("Datos de usuarios cargados correctamente.");
   const btnAgregarUsuarios = document.querySelector("#btnAgregarUsuarios");
   const tablaUsuarios = document.querySelector("#tablaUsuarios");
-
   // Validar existencia de elementos críticos
   if (!btnAgregarUsuarios || !tablaUsuarios) {
       console.error("Error: Elementos requeridos para registrar eventos no encontrados.");
@@ -187,9 +162,10 @@ export const cargarUsuarios = async () => {
   // Evento para "Agregar Usuario"
   if (btnAgregarUsuarios) {
     btnAgregarUsuarios.addEventListener("click", async () => {
-      console.log("Botón Agregar Usuarios presionado.");
       if (formUsuario) formUsuario.reset(); // Limpia el formulario
       const imgAgregarUsuario = document.querySelector("#img-preview");
+      console.log("Botón Agregar Usuarios presionado.");
+      
       if (imgAgregarUsuario) imgAgregarUsuario.style.display = "none"; // Oculta la imagen previa
 
       // Reinicia selects y carga valores dinámicos
@@ -201,109 +177,99 @@ export const cargarUsuarios = async () => {
       await cargarGeneros();
       await cargarProvincias();
 
-      modalUsuarios.show(); // Abre el modal para crear usuario
       accionFormUsuario = "crear"; // Marca la acción como "crear"
+      modalUsuarios.show(); // Abre el modal para crear usuario
+      
       
   });
 
   
   }
 
-
+ 
+  
   tablaUsuarios.addEventListener("click", async (e) => {
-
-      // Evento para "Editar Usuario"
-      if (e.target.classList.contains("btnEditar")) {
-        //  // Limpia manualmente el formulario
-        //  document.getElementById("user").value = "";
-        //  document.getElementById("name").value = "";
-        //  document.getElementById("lastname").value = "";
-        //  document.getElementById("email").value = "";
-        //  document.getElementById("rol_usuario").value = "";
-        //  document.getElementById("generos").value = "";
-        //  document.getElementById("provincias").value = "";
-        //  document.getElementById("fechaNac").value = "";
+    if (e.target.classList.contains("btnEditar")) {
       const fila = e.target.closest("tr");
-          console.log("Botón Editar presionado en fila:", fila.children[0].innerHTML);
-        // Validar si una fila fue seleccionada correctamente
       if (!fila) {
         console.error("Error: No se pudo encontrar la fila correspondiente.");
         return;
       }
-        // Limpia el formulario
   
-    if (formUsuario) formUsuario.reset();
-    // console.log("Fila seleccionada:", fila);
-        console.log("Datos de la fila seleccionada:");
-        console.log("ID:", fila.children[1]?.innerHTML);
-        console.log("Usuario:", fila.children[2]?.innerHTML);
-        console.log("Nombre:", fila.children[3]?.innerHTML);
-        console.log("Apellido:", fila.children[4]?.innerHTML);
-
-      
-          // Obtén valores de la fila
-          idFormUsuario = fila.children[1].innerHTML;
-
-         
-
-       
-          // Asigna los valores
-          document.getElementById("user").value = fila.children[2].innerHTML;
-          document.getElementById("name").value = fila.children[3].innerHTML;
-          document.getElementById("lastname").value = fila.children[4].innerHTML;
-          document.getElementById("email").value = fila.children[7].innerHTML;
-          
-          const imgPreview = document.querySelector("#img-preview");
-          if (imgPreview) {
-              imgPreview.src = fila.children[5].querySelector("img").src;
-              imgPreview.style.display = "block";
-          }
-
-          // Carga valores dinámicos para selects
-          try {
-            const selectRol = document.getElementById("rol_usuario");
-            const selectGenero = document.getElementById("generos");
-            const selectProvincia = document.getElementById("provincias");
-        
-            // Limpiar opciones previas para evitar duplicados
-            selectRol.innerHTML = "";
-            selectGenero.innerHTML = "";
-            selectProvincia.innerHTML = "";
-        
-        
-            await cargarRoles();
-            await cargarGeneros();
-            await cargarProvincias();
-        
-            const rolId = Array.from(document.getElementById("rol_usuario").options).find(
-                option => option.textContent === fila.children[6]?.innerHTML
-            )?.value;
-            selectRol.value = rolId || "";
-        
-            const generoId = Array.from(document.getElementById("generos").options).find(
-                option => option.textContent === fila.children[9]?.innerHTML
-            )?.value;
-            selectGenero.value = generoId || "";
-        
-            const provinciaId = Array.from(document.getElementById("provincias").options).find(
-                option => option.textContent === fila.children[10]?.innerHTML
-            )?.value;
-            selectProvincia.value = provinciaId || "";
-        } catch (error) {
-            console.error("Error al cargar selects dinámicos:", error);
-        }
-
-          // Formatea la fecha antes de asignarla
-          const [day, month, year] = fila.children[8].innerHTML.split("/");
-          const formattedDate = `${year}-${month}-${day}`;
-          document.getElementById("fechaNac").value = formattedDate;
-    
-          accionFormUsuario = "editar"; // Marca la acción como "editar"
-          console.log("Mostrando el modal de edición...");
-          modalUsuarios.show();
-          
+      console.log("Botón Editar presionado en fila:", fila.children[0].innerHTML);
+  
+      // Resetear el formulario y los elementos personalizados
+      if (formUsuario) formUsuario.reset();
+  
+      // Limpiar vista previa de imagen
+      const imgPreview = document.querySelector("#img-preview");
+      if (imgPreview) {
+        imgPreview.src = "";
+        imgPreview.style.display = "none";
       }
+      document.getElementById("user_pic").value = "";
+  
+      //Resetear selects con opción por defecto
+      const selectRol = document.getElementById("rol_usuario");
+      const selectGenero = document.getElementById("generos");
+      const selectProvincia = document.getElementById("provincias");
+  
+      selectRol.innerHTML = '<option selected disabled>Seleccione un rol</option>';
+      selectGenero.innerHTML = '<option selected disabled>Seleccione un género</option>';
+      selectProvincia.innerHTML = '<option selected disabled>Seleccione una provincia</option>';
+  
+      // Cargar selects dinámicos
+      try {
+        await cargarRoles();
+        await cargarGeneros();
+        await cargarProvincias();
+  
+        // Asignar valores a los selects (una vez cargados)
+        const rolId = Array.from(selectRol.options).find(
+          option => option.textContent.trim() === fila.children[6]?.innerHTML.trim()
+        )?.value;
+        selectRol.value = rolId || "";
+  
+        const generoId = Array.from(selectGenero.options).find(
+          option => option.textContent.trim() === fila.children[9]?.innerHTML.trim()
+        )?.value;
+        selectGenero.value = generoId || "";
+  
+        const provinciaId = Array.from(selectProvincia.options).find(
+          option => option.textContent.trim() === fila.children[10]?.innerHTML.trim()
+        )?.value;
+        selectProvincia.value = provinciaId || "";
+      } catch (error) {
+        console.error("Error al cargar selects dinámicos:", error);
+      }
+  
+      //Cargar datos al formulario
+      idFormUsuario = fila.children[1].innerHTML;
+      document.getElementById("user").value = fila.children[2].innerHTML;
+      document.getElementById("name").value = fila.children[3].innerHTML;
+      document.getElementById("lastname").value = fila.children[4].innerHTML;
+      document.getElementById("email").value = fila.children[7].innerHTML;
+  
+      // Mostrar imagen previa si existe
+      const imgEnTabla = fila.children[5].querySelector("img");
+      if (imgPreview && imgEnTabla) {
+        imgPreview.src = imgEnTabla.src;
+        imgPreview.style.display = "block";
+      }
+  
+      // Formatear y asignar fecha
+      const [day, month, year] = fila.children[8].innerHTML.split("/");
+      const formattedDate = `${year}-${month}-${day}`;
+      document.getElementById("fechaNac").value = formattedDate;
+  
+      accionFormUsuario = "editar";
+  
+      // Mostrar modal SOLO cuando todo esté listo
+      console.log("Mostrando el modal de edición...");
+      modalUsuarios.show();
+    }
 
+  
       // Evento para "Borrar Usuario"
       else if (e.target.classList.contains("btnBorrar")) {
         const fila = e.target.closest("tr");
@@ -326,6 +292,10 @@ export const cargarUsuarios = async () => {
 
   // Marca como eventos registrados
   tablaUsuarios.dataset.eventRegistered = true;
+  accionFormUsuario = "";
+idFormUsuario = "";
+if (formUsuario) formUsuario.reset();
+
 };
 
 
@@ -534,3 +504,100 @@ document.addEventListener("seccionGestionUsuariosCargada", () => {
 });
 
 
+ // const tablaUsuarios = document.querySelector("#tablaUsuarios");
+
+  // tablaUsuarios.addEventListener("click", async (e) => {
+
+  //     // Evento para "Editar Usuario"
+  //     if (e.target.classList.contains("btnEditar")) {
+  //       //  // Limpia manualmente el formulario
+  //       //  document.getElementById("user").value = "";
+  //       //  document.getElementById("name").value = "";
+  //       //  document.getElementById("lastname").value = "";
+  //       //  document.getElementById("email").value = "";
+  //       //  document.getElementById("rol_usuario").value = "";
+  //       //  document.getElementById("generos").value = "";
+  //       //  document.getElementById("provincias").value = "";
+  //       //  document.getElementById("fechaNac").value = "";
+  //     const fila = e.target.closest("tr");
+  //         console.log("Botón Editar presionado en fila:", fila.children[0].innerHTML);
+  //       // Validar si una fila fue seleccionada correctamente
+  //     if (!fila) {
+  //       console.error("Error: No se pudo encontrar la fila correspondiente.");
+  //       return;
+  //     }
+  //       // Limpia el formulario
+  
+  //   if (formUsuario) formUsuario.reset();
+    
+    
+  //   // console.log("Fila seleccionada:", fila);
+  //       console.log("Datos de la fila seleccionada:");
+  //       console.log("ID:", fila.children[1]?.innerHTML);
+  //       console.log("Usuario:", fila.children[2]?.innerHTML);
+  //       console.log("Nombre:", fila.children[3]?.innerHTML);
+  //       console.log("Apellido:", fila.children[4]?.innerHTML);
+
+      
+  //         // Obtén valores de la fila
+  //         idFormUsuario = fila.children[1].innerHTML;
+
+         
+
+       
+  //         // Asigna los valores
+  //         document.getElementById("user").value = fila.children[2].innerHTML;
+  //         document.getElementById("name").value = fila.children[3].innerHTML;
+  //         document.getElementById("lastname").value = fila.children[4].innerHTML;
+  //         document.getElementById("email").value = fila.children[7].innerHTML;
+          
+  //         const imgPreview = document.querySelector("#img-preview");
+  //         if (imgPreview) {
+  //             imgPreview.src = fila.children[5].querySelector("img").src;
+  //             imgPreview.style.display = "block";
+  //         }
+
+  //         // Carga valores dinámicos para selects
+  //         try {
+  //           const selectRol = document.getElementById("rol_usuario");
+  //           const selectGenero = document.getElementById("generos");
+  //           const selectProvincia = document.getElementById("provincias");
+        
+  //           // Limpia opciones previas para evitar duplicados
+  //           selectRol.innerHTML = "";
+  //           selectGenero.innerHTML = "";
+  //           selectProvincia.innerHTML = "";
+        
+        
+  //           await cargarRoles();
+  //           await cargarGeneros();
+  //           await cargarProvincias();
+        
+  //           const rolId = Array.from(document.getElementById("rol_usuario").options).find(
+  //               option => option.textContent === fila.children[6]?.innerHTML
+  //           )?.value;
+  //           selectRol.value = rolId || "";
+        
+  //           const generoId = Array.from(document.getElementById("generos").options).find(
+  //               option => option.textContent === fila.children[9]?.innerHTML
+  //           )?.value;
+  //           selectGenero.value = generoId || "";
+        
+  //           const provinciaId = Array.from(document.getElementById("provincias").options).find(
+  //               option => option.textContent === fila.children[10]?.innerHTML
+  //           )?.value;
+  //           selectProvincia.value = provinciaId || "";
+  //       } catch (error) {
+  //           console.error("Error al cargar selects dinámicos:", error);
+  //       }
+
+  //         // Formatea la fecha antes de asignarla
+  //         const [day, month, year] = fila.children[8].innerHTML.split("/");
+  //         const formattedDate = `${year}-${month}-${day}`;
+  //         document.getElementById("fechaNac").value = formattedDate;
+    
+  //         accionFormUsuario = "editar"; // Marca la acción como "editar"
+  //         console.log("Mostrando el modal de edición...");
+  //         modalUsuarios.show();
+          
+  //     }
