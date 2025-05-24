@@ -3,7 +3,7 @@
 const db = require('../models/db');
 
 // Obtener todos los comentarios en la galería
-const allComentarios = (req, res) => {  
+const allGaleria = (req, res) => {  
     // Definimos la consulta SQL para obtener datos de la galería y los usuarios relacionados
     const query = `
     SELECT
@@ -29,20 +29,20 @@ const allComentarios = (req, res) => {
 };  
 
 // Obtener un comentario específico por su ID
-const showComentario = (req, res) => {  
+const showGaleria = (req, res) => {  
     // Extraemos el ID del comentario desde los parámetros de la solicitud
     const { id } = req.params;  
 
     // Definimos la consulta SQL para obtener un comentario específico
     const query = `
     SELECT
-     galeria.id_galeria,        -- ID único del comentario en la galería
-     usuarios.usuario AS usuario, -- Nombre del usuario que hizo el comentario
-     galeria.img_galeria,       -- Imagen asociada al comentario
-     galeria.pie_galeria        -- Texto del comentario
+     galeria.id_galeria,        
+     usuarios.usuario AS usuario, 
+     galeria.img_galeria,      
+     galeria.pie_galeria       
      FROM galeria
      LEFT JOIN usuarios ON galeria.fk_usuario = usuarios.id_usuario
-     WHERE galeria.id_galeria = ? -- Filtramos por ID específico
+     WHERE galeria.id_galeria = ? 
      `;  
 
     // Ejecutamos la consulta en la base de datos
@@ -55,7 +55,7 @@ const showComentario = (req, res) => {
 };
 
 // Crear 
-const storeComentario = (req, res) => {
+const storeGaleria = (req, res) => {
     let imageName = req.file ? req.file.filename : "/images/default.png";
   if (req.file) { // Verifico si se ha subido un archivo
       imageName = req.file.filename; // Si se sube un archivo, asigno el nombre de la imagenimageName
@@ -69,14 +69,14 @@ const storeComentario = (req, res) => {
 
     const query = 'INSERT INTO galeria (fk_usuario, img_galeria, pie_galeria) VALUES (?, ?, ?)';
     db.query(query, [fk_usuario, imageName, pie_galeria], (err) => {
-        if (err) return res.status(500).json({ error: 'Error al crear el comentario' });
-        res.status(201).json({ message: 'Comentario creado exitosamente' });
+        if (err) return res.status(500).json({ error: 'Error al crear la galeria' });
+        res.status(201).json({ message: 'Galeria creada exitosamente' });
     });
 };
 
 
 // Función para actualizar un comentario en la galería
-const updateComentario = (req, res) => {  
+const updateGaleria = (req, res) => {  
     // Obtiene el ID del comentario desde los parámetros de la solicitud
     const comentarioId = req.params.id;
 
@@ -130,7 +130,7 @@ const updateComentario = (req, res) => {
 };
 
 // Eliminar un comentario
-const destroyComentario = (req, res) => {
+const destroyGaleria = (req, res) => {
     const { id } = req.params;
     const sql = 'DELETE FROM galeria WHERE id_galeria = ?';
     db.query(sql, [id], (error, result) => {
@@ -148,4 +148,4 @@ const destroyComentario = (req, res) => {
 });
 };
 
-module.exports = { allComentarios, showComentario, storeComentario, updateComentario, destroyComentario };
+module.exports = { allGaleria, showGaleria, storeGaleria, updateGaleria, destroyGaleria };

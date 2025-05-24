@@ -50,8 +50,8 @@ app.use("/uploadsGaleria", express.static(path.join(__dirname, "uploadsGaleria")
 // Importar rutas
 const authRouter = require("./private/routes/auth.router");
 const clientesRouter = require("./private/routes/clientes.router");
-const comentarioRouter = require("./private/routes/comentario.router");
-const cervezaRouter = require("./private/routes/cerveza.router");
+const GaleriaRouter = require("./private/routes/galeria.router");
+const cervezasRouter = require("./private/routes/cervezas.router");
 const provinciasRouter = require("./private/routes/provincias.router");
 const generosRouter = require("./private/routes/generos.router");
 const userRouter = require("./private/routes/user.router");
@@ -61,8 +61,8 @@ const rolesRouter = require("./private/routes/roles.router");
 // Usar rutas con prefijos
 app.use("/auth", authRouter);
 app.use("/clientes", clientesRouter);
-app.use("/galeria", comentarioRouter);
-app.use("/cerveza", cervezaRouter);
+app.use("/galeria", GaleriaRouter);
+app.use("/cervezas", cervezasRouter);
 app.use("/provincias", provinciasRouter);
 app.use("/generos", generosRouter);
 app.use("/user", userRouter);

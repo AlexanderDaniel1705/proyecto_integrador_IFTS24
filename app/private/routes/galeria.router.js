@@ -1,7 +1,7 @@
 // Rutas para gestionar comentarios
 const express = require("express");
 const router = express.Router();
-const comentarioController = require("../controllers/comentario.controller");
+const galeriaController = require("../controllers/galeria.controller");
 
 // const authenticateToken = require("../middleware/authRole.middleware"); // Middleware para autenticar tokens JWT
 // const { checkRole } = require("../middleware/roles.middleware"); // Middleware para verificar roles
@@ -45,21 +45,21 @@ const uploadGaleria = multer({
 // Proteger las rutas con autenticación
 // router.use(authenticateToken);
 
-// Obtener todos los comentarios (admin)
-router.get("/", comentarioController.allComentarios);
+// Obtener todos  (admin)
+router.get("/", galeriaController.allGaleria);
 
-// Obtener un comentario por ID
-router.get("/:id", comentarioController.showComentario);
+// Obtener una por ID
+router.get("/:id", galeriaController.showGaleria);
 
-// Crear un nuevo comentario (usuario autenticado)
-router.post("/",uploadGaleria.single("img_galeria"), comentarioController.storeComentario);
+// Crear una nueva (usuario autenticado)
+router.post("/",uploadGaleria.single("img_galeria"), galeriaController.storeGaleria);
 
-// Actualizar un comentario (solo el dueño)
-router.put("/:id",uploadGaleria.single("img_galeria"), comentarioController.updateComentario);
+// Actualizar una galeria (solo el dueño)
+router.put("/:id",uploadGaleria.single("img_galeria"), galeriaController.updateGaleria);
 
 
 
-// Eliminar un comentario (solo el dueño)
-router.delete("/:id", comentarioController.destroyComentario);
+// Eliminar una galeria (solo el dueño)
+router.delete("/:id", galeriaController.destroyGaleria);
 
 module.exports = router;

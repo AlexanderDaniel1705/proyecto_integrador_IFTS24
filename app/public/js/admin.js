@@ -97,8 +97,12 @@ async function cargarSeccion(url, scriptPath, funcionCarga) {
         console.log(scriptPath); // Muestra el script asociado a la sección
 
         const html = await response.text(); // Obtiene el HTML de la respuesta
-        const main = document.querySelector("main");
+        const main = document.querySelector("#main-content");
 
+        if (!main) {
+            console.error("Error: No se encontró el elemento <main id='main-content'> en el DOM.");
+            return;
+        }
         // Verifica si la sección ya está cargada para evitar recargar innecesariamente
         if (main.dataset.currentSection === url) {
             console.log("La sección ya está cargada. No se volverá a cargar.");

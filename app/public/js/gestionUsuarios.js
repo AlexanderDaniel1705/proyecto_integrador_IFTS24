@@ -1,302 +1,187 @@
 // Obtener los registros desde el backend
 const url = "http://localhost:3000/user/"
-// const tablaCuerpo = document.querySelector("#tablaUsuarios");
+let modalUsuariosInstance;
+let currentFormUsuario;
+
 let accionFormUsuario = '';
 let idFormUsuario = 0; 
 const formUsuario = document.getElementById("register-form");
-// Inicializa modalUsuarios como constante al cargar el DOM
 const modalUsuarios = new bootstrap.Modal(document.getElementById('modalUsuario'), {
-    backdrop: 'static', // Desactiva el cierre del modal con click fuera del modal
-    keyboard: false     // Desactiva el cierre del modal con la tecla ESC
+    backdrop: 'static',
+    keyboard: false
 });
 
-
 modalUsuarios._element.addEventListener("show.bs.modal", () => {
-  // Cuando el modal se muestra, eliminamos 'inert' para que sea accesible e interactuable
   modalUsuarios._element.removeAttribute("inert");
 });
 
 modalUsuarios._element.addEventListener("hide.bs.modal", () => {
   const btnAgregarUsuariosFocus = document.querySelector("#btnAgregarUsuarios");
-
   setTimeout(() => {
-    if (btnAgregarUsuariosFocus) btnAgregarUsuariosFocus.focus(); // Mueve el foco fuera del modal
-
-    // Cuando el modal se oculta, agregamos 'inert' para desactivar la interactividad
+    if (btnAgregarUsuariosFocus) btnAgregarUsuariosFocus.focus();
     modalUsuarios._element.setAttribute("inert", ""); 
   }, 10);
 });
 
-const cargarRoles = async () => {
-  // console.log("cargarRoles se ejecuta"); // Depuración
-  const rolesSelect = document.querySelector("#rol_usuario");
-
+const cargarSelectConOpciones = async (url, selectId, defaultOption) => {
+  const select = document.querySelector(selectId);
+  select.innerHTML = defaultOption;
   try {
-      const response = await fetch("http://localhost:3000/roles");
-      // console.log("Respuesta del fetch:", response); // Verificar respuesta del servidor
-
-      const roles = await response.json();
-      // console.log("Roles cargados:", roles); // Verificar datos cargados
-
-      roles.forEach(rol => {
-          const option = document.createElement("option");
-          option.value = rol.id_rol;
-          option.textContent = rol.nombre_rol;
-          rolesSelect.appendChild(option);
-      });
+    const response = await fetch(url);
+    const datos = await response.json();
+    datos.forEach(item => {
+      const option = document.createElement("option");
+      option.value = item.id_rol || item.id_genero || item.id_provincia;
+      option.textContent = item.nombre_rol || item.nombre_genero || item.nombre_provincia;
+      select.appendChild(option);
+    });
   } catch (error) {
-      console.error("Error al cargar los roles:", error);
-  }
-};
-const cargarGeneros = async () => {
-  const generosSelect = document.querySelector("#generos");
-
-  try {
-      const response = await fetch("http://localhost:3000/generos"); 
-      const generos = await response.json();
-
-      generos.forEach(genero => {
-          const option = document.createElement("option");
-          option.value = genero.id_genero;
-          option.textContent = genero.nombre_genero;
-          generosSelect.appendChild(option);
-      });
-  } catch (error) {
-      console.error("Error al cargar los géneros:", error);
+    console.error(`Error al cargar ${selectId}:`, error);
   }
 };
 
+const cargarRoles = () => cargarSelectConOpciones("http://localhost:3000/roles", "#rol_usuario", '<option value="" disabled selected>Selecciona un rol</option>');
+const cargarGeneros = () => cargarSelectConOpciones("http://localhost:3000/generos", "#generos", '<option value="" disabled selected>Selecciona un género</option>');
+const cargarProvincias = () => cargarSelectConOpciones("http://localhost:3000/provincias", "#provincias", '<option value="" disabled selected>Selecciona una provincia</option>');
 
-const cargarProvincias = async () => {
-  const provinciasSelect = document.querySelector("#provincias");
-
-  try {
-      const response = await fetch("http://localhost:3000/provincias"); 
-      const provincias = await response.json();
-
-      provincias.forEach(provincia => {
-          const option = document.createElement("option");
-          option.value = provincia.id_provincia;
-          option.textContent = provincia.nombre_provincia;
-          provinciasSelect.appendChild(option);
-      });
-  } catch (error) {
-      console.error("Error al cargar las provincias:", error);
-  }
-};
-
-
-// console.log(document.querySelector("#tablaUsuarios")); // Verifica si el elemento de la tabla existe
-// console.log(document.querySelector("#tablaUsuarios").innerHTML); // Revisa si la tabla se está llenando correctamente
-
-  // Función para cargar la tabla usuarios desde el servidor
 export const cargarUsuarios = async () => {
   console.log("Recargando datos de los usuarios desde la API...");
-
   const tablaCuerpoUsuarios = document.querySelector("#tablaUsuarios");
   if (!tablaCuerpoUsuarios) {
     console.error("Error: El elemento con id 'tablaUsuarios' no se encuentra en el DOM.");
     return;
-};
+  }
 
   try {
-      const response = await fetch(url);
-      const dataUsuarios = await response.json();
-
-      tablaCuerpoUsuarios.innerHTML = ""; // Limpiar la tabla antes de llenarla
-      console.log("Datos de los usuarios cargados:", dataUsuarios);
-
-      dataUsuarios.forEach((usuarios, index) => {
-          const filaUsuarios = document.createElement("tr");
-
-          const fechaFormateada = new Date(usuarios.fecha_nacimiento).toLocaleDateString("es-ES", {
-              day: "2-digit",
-              month: "2-digit",
-              year: "numeric",
-          });
-
-          filaUsuarios.innerHTML = `
-              <td>${index + 1}</td> <!-- Número de fila -->
-              <td>${usuarios.id_usuario}</td>
-              <td>${usuarios.usuario}</td>
-              <td>${usuarios.nombre}</td>
-              <td>${usuarios.apellido}</td>
-              <td><img src="/uploads/${usuarios.imagen_perfil}" class="rounded" alt="Imagen de perfil" width="100" height="100"></td>
-              <td>${usuarios.nombre_rol}</td>
-              <td>${usuarios.email}</td>
-              <td>${fechaFormateada}</td>
-              <td>${usuarios.nombre_genero}</td>
-              <td>${usuarios.nombre_provincia}</td>
-              <td class="text-center">
-              <a class="btnEditar btn btn-outline-warning">Editar</a> 
-              <a class="btnBorrar btn btn-outline-danger">Borrar</a></td>
-          `;
-
-          tablaCuerpoUsuarios.appendChild(filaUsuarios);
+    const response = await fetch(url);
+    const dataUsuarios = await response.json();
+    tablaCuerpoUsuarios.innerHTML = "";
+    dataUsuarios.forEach((usuarios, index) => {
+      const filaUsuarios = document.createElement("tr");
+      const fechaFormateada = new Date(usuarios.fecha_nacimiento).toLocaleDateString("es-ES", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
       });
-      
-      
+      filaUsuarios.innerHTML = `
+        <td>${index + 1}</td>
+        <td>${usuarios.id_usuario}</td>
+        <td>${usuarios.usuario}</td>
+        <td>${usuarios.nombre}</td>
+        <td>${usuarios.apellido}</td>
+        <td><img src="/uploads/${usuarios.imagen_perfil}" class="rounded" alt="Imagen de perfil" width="100" height="100"></td>
+        <td>${usuarios.nombre_rol}</td>
+        <td>${usuarios.email}</td>
+        <td>${fechaFormateada}</td>
+        <td>${usuarios.nombre_genero}</td>
+        <td>${usuarios.nombre_provincia}</td>
+        <td class="text-center">
+          <a class="btnEditar btn btn-outline-warning">Editar</a> 
+          <a class="btnBorrar btn btn-outline-danger">Borrar</a>
+        </td>
+      `;
+      tablaCuerpoUsuarios.appendChild(filaUsuarios);
+    });
   } catch (error) {
-      console.error("Error al cargar los usuarios:", error);
+    console.error("Error al cargar los usuarios:", error);
   }
   registrarEventosUsuarios();
 };
 
-
- const registrarEventosUsuarios = () => {
+const registrarEventosUsuarios = () => {
   console.log("Datos de usuarios cargados correctamente.");
   const btnAgregarUsuarios = document.querySelector("#btnAgregarUsuarios");
   const tablaUsuarios = document.querySelector("#tablaUsuarios");
-  // Validar existencia de elementos críticos
+
   if (!btnAgregarUsuarios || !tablaUsuarios) {
-      console.error("Error: Elementos requeridos para registrar eventos no encontrados.");
-      return;
+    console.error("Error: Elementos requeridos para registrar eventos no encontrados.");
+    return;
   }
-  // Validación de eventos duplicados en tablaUsuarios
+
   if (tablaUsuarios.dataset.eventRegistered) {
     console.log("Eventos ya registrados en tablaUsuarios. No se duplicarán.");
     return;
-}
-  
-
-  // Evento para "Agregar Usuario"
-  if (btnAgregarUsuarios) {
-    btnAgregarUsuarios.addEventListener("click", async () => {
-      if (formUsuario) formUsuario.reset(); // Limpia el formulario
-      const imgAgregarUsuario = document.querySelector("#img-preview");
-      console.log("Botón Agregar Usuarios presionado.");
-      
-      if (imgAgregarUsuario) imgAgregarUsuario.style.display = "none"; // Oculta la imagen previa
-
-      // Reinicia selects y carga valores dinámicos
-      document.querySelector("#rol_usuario").innerHTML = '<option value="" disabled selected>Selecciona un rol</option>';
-      document.querySelector("#generos").innerHTML = '<option value="" disabled selected>Selecciona un género</option>';
-      document.querySelector("#provincias").innerHTML = '<option value="" disabled selected>Selecciona una provincia</option>';
-      
-      await cargarRoles();
-      await cargarGeneros();
-      await cargarProvincias();
-
-      accionFormUsuario = "crear"; // Marca la acción como "crear"
-      modalUsuarios.show(); // Abre el modal para crear usuario
-      
-      
-  });
-
-  
   }
 
- 
-  
+  btnAgregarUsuarios.addEventListener("click", async () => {
+    if (formUsuario) formUsuario.reset();
+    const imgAgregarUsuario = document.querySelector("#img-preview");
+    if (imgAgregarUsuario) imgAgregarUsuario.style.display = "none";
+    await cargarRoles();
+    await cargarGeneros();
+    await cargarProvincias();
+    accionFormUsuario = "crear";
+    modalUsuarios.show();
+  });
+
   tablaUsuarios.addEventListener("click", async (e) => {
+    const fila = e.target.closest("tr");
+    if (!fila) return;
+
     if (e.target.classList.contains("btnEditar")) {
-      const fila = e.target.closest("tr");
-      if (!fila) {
-        console.error("Error: No se pudo encontrar la fila correspondiente.");
-        return;
-      }
-  
-      console.log("Botón Editar presionado en fila:", fila.children[0].innerHTML);
-  
-      // Resetear el formulario y los elementos personalizados
       if (formUsuario) formUsuario.reset();
-  
-      // Limpiar vista previa de imagen
       const imgPreview = document.querySelector("#img-preview");
       if (imgPreview) {
         imgPreview.src = "";
         imgPreview.style.display = "none";
       }
       document.getElementById("user_pic").value = "";
-  
-      //Resetear selects con opción por defecto
+
+      await cargarRoles();
+      await cargarGeneros();
+      await cargarProvincias();
+
       const selectRol = document.getElementById("rol_usuario");
       const selectGenero = document.getElementById("generos");
       const selectProvincia = document.getElementById("provincias");
-  
-      selectRol.innerHTML = '<option selected disabled>Seleccione un rol</option>';
-      selectGenero.innerHTML = '<option selected disabled>Seleccione un género</option>';
-      selectProvincia.innerHTML = '<option selected disabled>Seleccione una provincia</option>';
-  
-      // Cargar selects dinámicos
-      try {
-        await cargarRoles();
-        await cargarGeneros();
-        await cargarProvincias();
-  
-        // Asignar valores a los selects (una vez cargados)
-        const rolId = Array.from(selectRol.options).find(
-          option => option.textContent.trim() === fila.children[6]?.innerHTML.trim()
-        )?.value;
-        selectRol.value = rolId || "";
-  
-        const generoId = Array.from(selectGenero.options).find(
-          option => option.textContent.trim() === fila.children[9]?.innerHTML.trim()
-        )?.value;
-        selectGenero.value = generoId || "";
-  
-        const provinciaId = Array.from(selectProvincia.options).find(
-          option => option.textContent.trim() === fila.children[10]?.innerHTML.trim()
-        )?.value;
-        selectProvincia.value = provinciaId || "";
-      } catch (error) {
-        console.error("Error al cargar selects dinámicos:", error);
-      }
-  
-      //Cargar datos al formulario
+
+      selectRol.value = [...selectRol.options].find(opt => opt.textContent.trim() === fila.children[6].textContent.trim())?.value || "";
+      selectGenero.value = [...selectGenero.options].find(opt => opt.textContent.trim() === fila.children[9].textContent.trim())?.value || "";
+      selectProvincia.value = [...selectProvincia.options].find(opt => opt.textContent.trim() === fila.children[10].textContent.trim())?.value || "";
+
       idFormUsuario = fila.children[1].innerHTML;
       document.getElementById("user").value = fila.children[2].innerHTML;
       document.getElementById("name").value = fila.children[3].innerHTML;
       document.getElementById("lastname").value = fila.children[4].innerHTML;
       document.getElementById("email").value = fila.children[7].innerHTML;
-  
-      // Mostrar imagen previa si existe
+
       const imgEnTabla = fila.children[5].querySelector("img");
       if (imgPreview && imgEnTabla) {
         imgPreview.src = imgEnTabla.src;
         imgPreview.style.display = "block";
       }
-  
-      // Formatear y asignar fecha
+
       const [day, month, year] = fila.children[8].innerHTML.split("/");
-      const formattedDate = `${year}-${month}-${day}`;
-      document.getElementById("fechaNac").value = formattedDate;
-  
+      document.getElementById("fechaNac").value = `${year}-${month}-${day}`;
+
       accionFormUsuario = "editar";
-  
-      // Mostrar modal SOLO cuando todo esté listo
-      console.log("Mostrando el modal de edición...");
       modalUsuarios.show();
     }
 
-  
-      // Evento para "Borrar Usuario"
-      else if (e.target.classList.contains("btnBorrar")) {
-        const fila = e.target.closest("tr");
-          const id = fila.children[1].innerHTML;
-          alertify.confirm("¿Está seguro de eliminar el usuario?", async () => {
-              try {
-                  const response = await fetch(url + id, { method: 'DELETE' });
-                  if (!response.ok) throw new Error("Error al eliminar el usuario.");
-                  fila.remove();
-                  alertify.message("Usuario eliminado exitosamente.");
-              } catch (error) {
-                  console.error("Error durante la eliminación:", error);
-                  alertify.error("Hubo un problema al intentar eliminar el usuario.");
-              }
-          }, () => {
-              alertify.error("Eliminación cancelada.");
-          });
-      }
+    else if (e.target.classList.contains("btnBorrar")) {
+      const id = fila.children[1].innerHTML;
+      alertify.confirm("¿Está seguro de eliminar el usuario?", async () => {
+        try {
+          const response = await fetch(url + id, { method: 'DELETE' });
+          if (!response.ok) throw new Error("Error al eliminar el usuario.");
+          fila.remove();
+          alertify.message("Usuario eliminado exitosamente.");
+        } catch (error) {
+          console.error("Error durante la eliminación:", error);
+          alertify.error("Hubo un problema al intentar eliminar el usuario.");
+        }
+      }, () => {
+        alertify.error("Eliminación cancelada.");
+      });
+    }
   });
 
-  // Marca como eventos registrados
   tablaUsuarios.dataset.eventRegistered = true;
   accionFormUsuario = "";
-idFormUsuario = "";
-if (formUsuario) formUsuario.reset();
-
+  idFormUsuario = "";
+  if (formUsuario) formUsuario.reset();
 };
+
 
 
 
