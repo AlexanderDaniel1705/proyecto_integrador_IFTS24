@@ -1,16 +1,16 @@
-// Obtener los registros desde el backend
-const urlAPIUsuarios = "http://localhost:3000/user/"; 
+    // Obtener los registros desde el backend
+    const urlAPIUsuarios = "http://localhost:3000/user/"; 
 
-// --- Variables del Módulo ---
-// Estas se (re)asignarán CADA VEZ que la sección de usuarios se cargue.
-let modalUsuariosInstance;     // Para la instancia de new bootstrap.Modal()
-let currentFormUsuarioElement; // Para la referencia al <form id="register-form"> actual
-let accionFormUsuario = '';
-let idFormUsuario = 0;
+    // --- Variables del Módulo ---
+    // Estas se (re)asignarán CADA VEZ que la sección de usuarios se cargue.
+    let modalUsuariosInstance;     // Para la instancia de new bootstrap.Modal()
+    let currentFormUsuarioElement; // Para la referencia al <form id="register-form"> actual
+    let accionFormUsuario = '';
+    let idFormUsuario = 0;
 
-// --- Funciones para Cargar Selects ---
+    // --- Funciones para Cargar Selects ---
 
-const cargarSelectConOpciones = async (url, selectId, defaultOptionText, valorKey, textoKey) => {
+    const cargarSelectConOpciones = async (url, selectId, defaultOptionText, valorKey, textoKey) => {
     const selectElement = document.querySelector(selectId); 
     if (!selectElement) {
         console.error(`Error: Elemento select ${selectId} no encontrado.`);
@@ -30,19 +30,19 @@ const cargarSelectConOpciones = async (url, selectId, defaultOptionText, valorKe
     } catch (error) {
         console.error(`Error al cargar ${selectId}:`, error);
     }
-};
+    };
 
-const cargarRoles = () => cargarSelectConOpciones("http://localhost:3000/roles", "#rol_usuario", "Selecciona un rol", "id_rol", "nombre_rol");
-const cargarGeneros = () => cargarSelectConOpciones("http://localhost:3000/generos", "#generos", "Selecciona un género", "id_genero", "nombre_genero");
-const cargarProvincias = () => cargarSelectConOpciones("http://localhost:3000/provincias", "#provincias", "Selecciona una provincia", "id_provincia", "nombre_provincia");
+    const cargarRoles = () => cargarSelectConOpciones("http://localhost:3000/roles", "#rol_usuario", "Selecciona un rol", "id_rol", "nombre_rol");
+    const cargarGeneros = () => cargarSelectConOpciones("http://localhost:3000/generos", "#generos", "Selecciona un género", "id_genero", "nombre_genero");
+    const cargarProvincias = () => cargarSelectConOpciones("http://localhost:3000/provincias", "#provincias", "Selecciona una provincia", "id_provincia", "nombre_provincia");
 
 
-// --- Handlers para eventos del modal de Bootstrap ---
-function handleModalBootstrapShow() {
-    if (this) this.removeAttribute("inert");
-}
+    // --- Handlers para eventos del modal de Bootstrap ---
+    function handleModalBootstrapShow() {
+        if (this) this.removeAttribute("inert");
+    }
 
-function handleModalBootstrapHide() {
+    function handleModalBootstrapHide() {
     // Uso currentFormUsuarioElement para el reset
     if (currentFormUsuarioElement) {
         currentFormUsuarioElement.reset();
@@ -56,7 +56,7 @@ function handleModalBootstrapHide() {
     // Limpiar imagen previa (document.getElementById obtiene el actual)
     const imgPreview = document.getElementById('img-preview');
     if (imgPreview) {
-        imgPreview.src = ''; // O '#' o un placeholder
+        imgPreview.src = ''; 
         imgPreview.style.display = 'none';
     }
     const userPicInput = document.getElementById('user_pic'); // Limpiar el input file también
@@ -72,12 +72,12 @@ function handleModalBootstrapHide() {
         if (btnAgregarUsuariosFocus) btnAgregarUsuariosFocus.focus();
         if (this) this.setAttribute("inert", "");
     }, 10);
-}
+    }
 
 
-// --- Función Principal Exportada (llamada desde admin.js) ---
-export const cargarUsuarios = async () => {
-    console.log("gestionUsuarios.js: Iniciando carga de sección de usuarios...");
+    // --- Función Principal Exportada (llamada desde admin.js) ---
+    export const cargarUsuarios = async () => {
+        console.log("gestionUsuarios.js: Iniciando carga de sección de usuarios...");
 
     const tablaCuerpoUsuarios = document.querySelector("#tablaUsuarios");
     if (!tablaCuerpoUsuarios) {
@@ -121,6 +121,7 @@ export const cargarUsuarios = async () => {
         if (!response.ok) throw new Error(`Error ${response.status}`);
         const dataUsuarios = await response.json();
         tablaCuerpoUsuarios.innerHTML = "";
+
         dataUsuarios.forEach((usuarios, index) => {
             const filaUsuarios = tablaCuerpoUsuarios.insertRow(); // Más eficiente que crear tr y luego innerHTML
             const fechaFormateada = new Date(usuarios.fecha_nacimiento).toLocaleDateString("es-ES", {
@@ -149,14 +150,14 @@ export const cargarUsuarios = async () => {
     }
     
     registrarTodosLosEventosUsuarios();
-};
+    };
 
-// --- Registrar TODOS los Event Listeners de la sección ---
-const registrarTodosLosEventosUsuarios = () => {
-    if (!currentFormUsuarioElement || !modalUsuariosInstance) {
-        console.error("Faltan referencias al formulario o al modal.");
-        return;
-    }
+    // --- Registrar TODOS los Event Listeners de la sección ---
+    const registrarTodosLosEventosUsuarios = () => {
+        if (!currentFormUsuarioElement || !modalUsuariosInstance) {
+            console.error("Faltan referencias al formulario o al modal.");
+            return;
+        }
 
     const btnAgregarUsuarios = document.querySelector("#btnAgregarUsuarios");
     const tablaUsuariosTBody = document.querySelector("#tablaUsuarios");
@@ -303,11 +304,11 @@ const registrarTodosLosEventosUsuarios = () => {
         tablaUsuariosTBody.dataset.eventRegistered = "true";
     }
 
-// --- Funciones de Utilidad ---
-function capitalizarTexto(texto) {
-    if (!texto) return "";
-    return texto.trim().split(" ").map(p => p.charAt(0).toUpperCase() + p.slice(1).toLowerCase()).join(" ");
-}
+    // --- Funciones de Utilidad ---
+    function capitalizarTexto(texto) {
+        if (!texto) return "";
+        return texto.trim().split(" ").map(p => p.charAt(0).toUpperCase() + p.slice(1).toLowerCase()).join(" ");
+    }
     // Evento para el submit del formulario
     if (currentFormUsuarioElement && !currentFormUsuarioElement.dataset.submitListenerAttached) {
         currentFormUsuarioElement.addEventListener('submit', async (e) => {
@@ -385,21 +386,21 @@ function capitalizarTexto(texto) {
 
     // Registrar Listeners de Validación de Inputs 
     registrarValidadoresDeInput(); 
-};
+    };
 
-// --- Registrar Validadores de Input ---
-const registrarValidadoresDeInput = () => {
-    if (!currentFormUsuarioElement) {
-        console.warn("Formulario no disponible para registrar validadores.");
-        return;
-    }
+    // --- Registrar Validadores de Input ---
+    const registrarValidadoresDeInput = () => {
+        if (!currentFormUsuarioElement) {
+            console.warn("Formulario no disponible para registrar validadores.");
+            return;
+        }
 
-// Usuario: mínimo 8 caracteres, sin espacios internos
-const userInput = currentFormUsuarioElement.querySelector("#user");
-if (userInput && !userInput.dataset.validationAttached) {
-    userInput.addEventListener("input", function (event) {
-        const usuario = event.target.value.trim();
-        const errorUsuario = currentFormUsuarioElement.querySelector(".errorUsuario");
+    // Usuario: mínimo 8 caracteres, sin espacios internos
+    const userInput = currentFormUsuarioElement.querySelector("#user");
+    if (userInput && !userInput.dataset.validationAttached) {
+        userInput.addEventListener("input", function (event) {
+            const usuario = event.target.value.trim();
+            const errorUsuario = currentFormUsuarioElement.querySelector(".errorUsuario");
 
         if (usuario.length < 8) {
             errorUsuario.textContent = "El usuario debe contener al menos 8 caracteres.";
@@ -413,23 +414,23 @@ if (userInput && !userInput.dataset.validationAttached) {
         }
     });
     userInput.dataset.validationAttached = "true";
-}
+    }
 
-// Nombre: Solo letras con acentos y espacios
-const nameInput = currentFormUsuarioElement.querySelector("#name");
-if (nameInput && !nameInput.dataset.validationAttached) {
-    nameInput.addEventListener("input", function (event) {
-        const regexNombre = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/;
-        if (!regexNombre.test(event.target.value)) {
-            event.target.value = event.target.value.replace(/[^A-Za-zÁÉÍÓÚáéíóúÑñ\s]/g, "");
-        }
-    });
-    nameInput.dataset.validationAttached = "true";
-}
+    // Nombre: Solo letras con acentos y espacios
+    const nameInput = currentFormUsuarioElement.querySelector("#name");
+    if (nameInput && !nameInput.dataset.validationAttached) {
+        nameInput.addEventListener("input", function (event) {
+            const regexNombre = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/;
+            if (!regexNombre.test(event.target.value)) {
+                event.target.value = event.target.value.replace(/[^A-Za-zÁÉÍÓÚáéíóúÑñ\s]/g, "");
+            }
+        });
+        nameInput.dataset.validationAttached = "true";
+    }
 
-// Apellido: Solo letras con acentos y espacios
-const lastnameInput = currentFormUsuarioElement.querySelector("#lastname");
-if (lastnameInput && !lastnameInput.dataset.validationAttached) {
+    // Apellido: Solo letras con acentos y espacios
+    const lastnameInput = currentFormUsuarioElement.querySelector("#lastname");
+    if (lastnameInput && !lastnameInput.dataset.validationAttached) {
     lastnameInput.addEventListener("input", function (event) {
         const regexApellido = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/;
         if (!regexApellido.test(event.target.value)) {
@@ -437,11 +438,11 @@ if (lastnameInput && !lastnameInput.dataset.validationAttached) {
         }
     });
     lastnameInput.dataset.validationAttached = "true";
-}
+    }
 
-// Fecha de nacimiento: válida, no futura, mínimo 18 años
-const fechaNacInput = currentFormUsuarioElement.querySelector("#fechaNac");
-if (fechaNacInput && !fechaNacInput.dataset.validationAttached) {
+    // Fecha de nacimiento: válida, no futura, mínimo 18 años
+    const fechaNacInput = currentFormUsuarioElement.querySelector("#fechaNac");
+    if (fechaNacInput && !fechaNacInput.dataset.validationAttached) {
     fechaNacInput.addEventListener("blur", function (event) {
         const valorFecha = event.target.value.trim();
         const errorFecha = currentFormUsuarioElement.querySelector(".errorFecha");
@@ -479,11 +480,11 @@ if (fechaNacInput && !fechaNacInput.dataset.validationAttached) {
         errorFecha.classList.add("escondido");
     });
     fechaNacInput.dataset.validationAttached = "true";
-}
+    }
 
-// Email: formato válido
-const emailInput = currentFormUsuarioElement.querySelector("#email");
-if (emailInput && !emailInput.dataset.validationAttached) {
+    // Email: formato válido
+    const emailInput = currentFormUsuarioElement.querySelector("#email");
+    if (emailInput && !emailInput.dataset.validationAttached) {
     emailInput.addEventListener("input", function (event) {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         const errorEmail = currentFormUsuarioElement.querySelector(".errorEmail");
@@ -497,14 +498,14 @@ if (emailInput && !emailInput.dataset.validationAttached) {
         }
     });
     emailInput.dataset.validationAttached = "true";
-}
+    }
 
 
 
 
-// --- Listener para evento personalizado ---
-document.addEventListener("seccionGestionUsuariosCargada", () => {
-    console.log("gestionUsuarios.js: Evento 'seccionGestionUsuariosCargada' detectado.");
-});
-};
+    // --- Listener para evento personalizado ---
+    document.addEventListener("seccionGestionUsuariosCargada", () => {
+        console.log("gestionUsuarios.js: Evento 'seccionGestionUsuariosCargada' detectado.");
+    });
+    };
 
