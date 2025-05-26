@@ -1,3 +1,4 @@
+// Obtener los registros desde el backend
 const urlAPIUsuarios = "http://localhost:3000/user/"; 
 
 // --- Variables del Módulo ---
@@ -10,7 +11,7 @@ let idFormUsuario = 0;
 // --- Funciones para Cargar Selects ---
 
 const cargarSelectConOpciones = async (url, selectId, defaultOptionText, valorKey, textoKey) => {
-    const selectElement = document.querySelector(selectId); // Si el select está DENTRO del modal, usa currentFormUsuarioElement.querySelector(selectId)
+    const selectElement = document.querySelector(selectId); 
     if (!selectElement) {
         console.error(`Error: Elemento select ${selectId} no encontrado.`);
         return;

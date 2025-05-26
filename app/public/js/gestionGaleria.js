@@ -48,10 +48,10 @@ export const cargarGaleria = async () => {
 
         // Limpia el contenido actual de la tabla
         tablaCuerpoGaleria.innerHTML = "";
-
+        console.log("Datos de la galería cargados:", dataGaleria);
         // Itera sobre cada objeto de galería y agrega una fila a la tabla
         dataGaleria.forEach((galeria) => {
-            console.log("Datos de la galería cargados:", dataGaleria);
+           
             const filaGaleria = document.createElement("tr");
             filaGaleria.innerHTML = `
                 <td>${galeria.id_galeria}</td>
@@ -63,7 +63,7 @@ export const cargarGaleria = async () => {
                     <a class="btnBorrarGaleria btn btn-outline-danger">Borrar</a>
                 </td>
             `;
-            console.log(`Usuario en la tabla: ${galeria.usuario}, ID almacenado: ${galeria.fk_usuario}`);
+            // console.log(`Usuario en la tabla: ${galeria.usuario}, ID almacenado: ${galeria.fk_usuario}`);
             tablaCuerpoGaleria.appendChild(filaGaleria); // Agrega la fila a la tabla
         });
 

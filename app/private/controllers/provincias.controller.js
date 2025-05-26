@@ -28,9 +28,9 @@ const showProvincia = (req, res) => {
 };
 // Crear una nueva provincia
 const storeProvincia = (req, res) => {
-    const { nombre } = req.body;
-    const query = 'INSERT INTO provincias (nombre) VALUES (?)';
-    db.query(query, [nombre], (err) => {
+    const { nombre_provincia } = req.body;
+    const query = 'INSERT INTO provincias (nombre_provincia) VALUES (?)';
+    db.query(query, [nombre_provincia], (err) => {
         if (err) return res.status(500).json({ error: 'Error al agregar la provincia' });
         res.status(201).json({ message: 'Provincia agregada exitosamente' });
     });
@@ -39,9 +39,9 @@ const storeProvincia = (req, res) => {
 // Actualizar una provincia
 const updateProvincia = (req, res) => {
     const { id } = req.params;
-    const { nombre } = req.body;
+    const { nombre_provincia } = req.body;
     const query = 'UPDATE provincias SET nombre_provincia = ? WHERE id_provincia = ?';
-    db.query(query, [nombre, id], (err) => {
+    db.query(query, [nombre_provincia, id], (err) => {
         if (err) return res.status(500).json({ error: 'Error al actualizar la provincia' });
         res.json({ message: 'Provincia actualizada exitosamente' });
     });

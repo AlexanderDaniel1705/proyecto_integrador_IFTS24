@@ -2,14 +2,15 @@
 const express = require("express");
 const router = express.Router();
 const generosController = require("../controllers/generos.controller"); // Importar el controlador de géneros
-// const authenticateToken = require("../middleware/authRole.middleware"); // Middleware para autenticar tokens JWT
-// const { checkRole } = require('../middleware/roles.middleware'); // Middleware para verificar roles
 
 // Proteger todas las rutas con autenticación
 // router.use(authenticateToken);
 
 // Obtener todos los géneros (disponible para todos los usuarios autenticados)
 router.get("/", generosController.allGeneros);
+
+// Obtener un genero por ID
+router.get("/:id", generosController.showGenero);
 
 // Crear un nuevo género (solo para administradores)
 router.post("/", generosController.storeGenero);

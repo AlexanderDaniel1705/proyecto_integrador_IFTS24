@@ -14,7 +14,7 @@ const allRoles = (req, res) => {
 // Para un rol específico
 const showRol = (req, res) => {
     const { id } = req.params; // Obtenemos el ID de los parámetros de la URL
-    const sql = "SELECT * FROM provincias WHERE id_rol = ?"; // Consulta SQL para obtener un rol por ID
+    const sql = "SELECT * FROM roles WHERE id_rol = ?"; // Consulta SQL para obtener un rol por ID
     db.query(sql, [id], (error, rows) => { // Ejecuta la consulta en la base de datos
        // console.log(rows); // Imprime los resultados en la consola para depuración
         if (error) { // Si ocurre un error durante la consulta
@@ -28,9 +28,9 @@ const showRol = (req, res) => {
 };
 // Crear un nuevo rol
 const storeRol = (req, res) => {
-    const { nombre } = req.body;
-    const query = 'INSERT INTO roles (nombre) VALUES (?)';
-    db.query(query, [nombre], (err) => {
+    const { nombre_rol } = req.body;
+    const query = 'INSERT INTO roles (nombre_rol) VALUES (?)';
+    db.query(query, [nombre_rol], (err) => {
         if (err) return res.status(500).json({ error: 'Error al agregar el rol' });
         res.status(201).json({ message: 'Rol agregada exitosamente' });
     });
@@ -39,9 +39,9 @@ const storeRol = (req, res) => {
 // Actualizar un rol
 const updateRol = (req, res) => {
     const { id } = req.params;
-    const { nombre } = req.body;
-    const query = 'UPDATE provincias SET nombre_rol = ? WHERE id_rol = ?';
-    db.query(query, [nombre, id], (err) => {
+    const { nombre_rol } = req.body;
+    const query = 'UPDATE roles SET nombre_rol = ? WHERE id_rol = ?';
+    db.query(query, [nombre_rol, id], (err) => {
         if (err) return res.status(500).json({ error: 'Error al actualizar el rol' });
         res.json({ message: 'Rol actualizado exitosamente' });
     });
