@@ -78,6 +78,7 @@ export const cargarGaleria = async () => {
 // Función para registrar los eventos dinámicos de los botones en la galería
 const registrarEventosGaleria = () => {
     const btnAgregarGaleria = document.querySelector("#btnAgregarGaleria");
+    alertify.defaults.glossary.title = ''; // Título vacío, elimina el encabezado
 
     // Evento para el botón "Agregar"
     if (btnAgregarGaleria) {

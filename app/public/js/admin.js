@@ -105,6 +105,7 @@ async function cargarSeccion(url, scriptPath, funcionCarga) {
             return;
         }
 
+
         main.innerHTML = html; // Inserta el contenido HTML en el área principal
         main.dataset.currentSection = url; // Marca la sección actual
 
