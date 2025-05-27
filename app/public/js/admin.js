@@ -9,14 +9,15 @@ document.querySelector(".btn-log-out").addEventListener("click", () => {
 
 // -----------------------------------------------------
 
-// Selección de elementos clave en el DOM
+// --- Interacciones de la Barra Lateral y Menú ---
+// Selección de elementos del DOM para la interfaz de la barra lateral.
 const img = document.querySelector(".img-logo"); // Logo de la aplicación
 const barraLateral = document.querySelector(".barra-lateral"); // Barra lateral de navegación
 const spans = document.querySelectorAll("span"); // Elementos de texto dentro de la barra lateral
 const menu = document.querySelector(".menu"); // Botón de menú para expandir/contraer la barra lateral
-const main = document.querySelector("main"); // Contenedor principal de la página
+const main = document.querySelector("#main-content"); // Contenedor principal de la página
 
-// Evento para reducir la barra lateral al hacer clic en el logo
+// Evento para minimizar/expandir  la barra lateral al hacer clic en el logo
 img.addEventListener("click", () => {
     barraLateral.classList.toggle("mini-barra-lateral"); // Alterna clase para minimizar la barra lateral
     main.classList.toggle("min-main"); // Ajusta el contenido principal para la vista reducida
@@ -90,44 +91,63 @@ if (!document.querySelector(`script[src="//cdn.jsdelivr.net/npm/alertifyjs@1.14.
 // Función asíncrona para cargar una sección de la página
 async function cargarSeccion(url, scriptPath, funcionCarga) {
     try {
-        const response = await fetch(url); // Solicita el contenido de la sección al servidor
-        if (!response.ok) throw new Error(`Error al cargar la sección: ${url}`); // Manejo de errores
+        // Petición para obtener el contenido HTML de la sección.
+        const response = await fetch(url); 
+        // Si la respuesta no es OK, lanzar un error.
+        if (!response.ok) throw new Error(`Error al cargar la sección: ${url}`); 
 
         console.log(url); // Muestra la URL solicitada en la consola
         console.log(scriptPath); // Muestra el script asociado a la sección
 
         const html = await response.text(); // Obtiene el HTML de la respuesta
-        const main = document.querySelector("#main-content");
+        // Selecciona el contenedor principal donde se insertará el HTML.
+        const mainContainer = document.querySelector("#main-content");
 
-        if (!main) {
+        if (!mainContainer) {
             console.error("Error: No se encontró el elemento <main id='main-content'> en el DOM.");
             return;
         }
         // Verifica si la sección ya está cargada para evitar recargar innecesariamente
-        if (main.dataset.currentSection === url) {
+        if (mainContainer.dataset.currentSection === url) {
             console.log("La sección ya está cargada. No se volverá a cargar.");
             return;
         }
 
-
-        main.innerHTML = html; // Inserta el contenido HTML en el área principal
-        main.dataset.currentSection = url; // Marca la sección actual
+        // Reemplaza el contenido del contenedor principal con el nuevo HTML de la sección.
+        // ESTO DESTRUYE Y RECREA TODO EL DOM DENTRO DE mainContainer.
+        mainContainer.innerHTML = html; 
+        // Actualiza el `dataset` para marcar qué sección está ahora cargada.
+        mainContainer.dataset.currentSection = url; // Marca la sección actual
 
         // Cargar el script asociado a la sección de forma segura
         const modulo = await import(scriptPath).catch(error => {
-            console.error('Error al cargar el módulo:', error);
+            console.error(`Error al importar el módulo: ${scriptPath}`, error);
+            if (mainContainer) mainContainer.innerHTML = 
+            `<p>Error crítico al cargar el script para ${url}. Revise la consola.</p>`;
+            return null; 
         });
 
         // Ejecutar la función de carga si existe
         if (modulo && typeof modulo[funcionCarga] === "function") {
             modulo[funcionCarga](); 
         } else {
-            console.error(`La función ${funcionCarga} no se pudo ejecutar.`);
+            console.error(`La función '${funcionCarga}' no se pudo encontrar o no es una función en el módulo '${scriptPath}'.`);
+            if (mainContainer && !modulo) { // Si el módulo no cargó, el error ya se mostró.
+                // No hacer nada más para evitar sobreescribir el mensaje de error de importación.
+            } else if (mainContainer) {
+                mainContainer.innerHTML = `<p>Error al inicializar la sección ${url}: función de carga no encontrada.</p>`;
+            }
+
         }
 
-    } catch (error) {
+    } catch (error) {// Captura errores de la petición fetch o cualquier otro error en el bloque try.
         console.error("Error:", error); // Captura y muestra errores en la consola
-        main.innerHTML = `<p>Error al cargar ${url}</p>`; // Muestra mensaje de error en la página
+         // Intentar mostrar el error en el contenedor principal si aún es accesible.
+         const mainElementForError = document.querySelector("#main-content"); 
+         if (mainElementForError) {
+             mainElementForError.innerHTML = `<p>Error al cargar la sección ${url}. Detalles: ${error.message}</p>`;
+         }
+ 
     }
 }
 

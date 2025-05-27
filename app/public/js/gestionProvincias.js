@@ -2,21 +2,29 @@
 const urlAPIProvincia = "http://localhost:3000/provincias/";
 
 // --- Variables del Módulo ---
-// Estas se (re)asignarán CADA VEZ que la sección de usuarios se cargue.
-let modalProvinciasInstance;     // Para la instancia de new bootstrap.Modal()
-let currentFormProvinciasElement; // Para la referencia al <form id="register-formProvincia"> actual
+// Estas variables guardarán el estado y las referencias a elementos importantes de esta sección.
+// Se (re)asignarán CADA VEZ que la sección de provincia se cargue dinámicamente.
+
+// Guardará la instancia del objeto Modal de Bootstrap 
+let modalProvinciasInstance;  
+// Guardará la referencia al elemento <form> del modal  (ej. <form id="register-formProvincias">).   
+let currentFormProvinciasElement; 
 
 // Variable para determinar si se está creando o editando
 let accionFormProvincias = ''; 
-// ID del registro de la provincia que se editará
+// Guarda el ID del elemento de la galería que se está editando.
 let idFormProvincia = 0; 
 
 
-// --- Handlers para eventos del modal de Bootstrap ---
+// --- Handlers (manejadores) para eventos del modal de Bootstrap 
+// Estas funciones se ejecutarán cuando el modal  se muestre o se oculte.
+
+// Función que se ejecuta JUSTO ANTES de que el modal  se muestre.
 function handleModalBootstrapShow() {
     if (this) this.removeAttribute("inert");
 }
 
+// Función que se ejecuta JUSTO DESPUÉS de que el modal de galería se ha ocultado.
 function handleModalBootstrapHide() {
     // Uso currentFormUsuarioElement para el reset
     if (currentFormProvinciasElement) {
@@ -28,10 +36,10 @@ function handleModalBootstrapHide() {
         });
     }
    
-
+    // Reinicia las variables de control de estado del formulario de provincias.
     accionFormProvincias = '';
     idFormProvincia = 0;
-    
+    // Intenta devolver el foco al botón "Agregar Provincia".
     const btnAgregarProvinciaFocus = document.querySelector("#btnAgregarProvincia");
     setTimeout(() => {
         if (btnAgregarProvinciaFocus) btnAgregarProvinciaFocus.focus();
@@ -39,7 +47,10 @@ function handleModalBootstrapHide() {
     }, 10);
 }
 
-// Función para cargar las provincias desde el servidor
+// --- Función Principal Exportada (llamada desde admin.js para esta sección) ---
+// Responsable de cargar los datos de las provincias, (re)inicializar su modal y formulario,
+// y registrar sus manejadores de eventos.
+
 export const cargarProvincias = async () => {
     console.log("Recargando datos de las provincias desde la API...");
 
@@ -132,7 +143,10 @@ const registrarEventosProvincias = () => {
             idFormProvincia = 0;
             currentFormProvinciasElement.reset(); // Usa la referencia actual del formulario
 
-            // currentFormUsuarioElement.querySelector(".modal-title").textContent = "Agregar Nuevo Usuario";
+            // Cambiar título del modal 
+            // const modalTitleElement = currentFormProvinciasElement.querySelector(".modal-title");
+            // if (modalTitleElement) modalTitleElement.textContent = "Agregar Nueva Provincia";
+
 
 
             currentFormProvinciasElement.querySelectorAll('.errorProvincia').forEach(span => {
@@ -141,7 +155,7 @@ const registrarEventosProvincias = () => {
             });
 
             
-            modalProvinciasInstance.show(); // Usa la instancia actual del modal
+            modalProvinciasInstance.show(); //Muestra el modal de provincias.
         });
     }
 
@@ -159,12 +173,17 @@ const registrarEventosProvincias = () => {
                 accionFormProvincias = "editar";
                 idFormProvincia = filaProvincias.cells[0].textContent;
                 currentFormProvinciasElement.reset();
+
+                // Cambiar título del modal 
+                // const modalTitleElement = currentFormProvinciasElement.querySelector(".modal-title");
+                // if (modalTitleElement) modalTitleElement.textContent = "Editar Provincia";
+
      
                 currentFormProvinciasElement.querySelectorAll('.errorProvincia').forEach(span => {
                     span.textContent = "";
                     span.classList.add("escondido");
                 });
-                
+                // Poblar el campo del nombre de la provincia en el formulario.
                 currentFormProvinciasElement.querySelector("#nombre_provincia").value = filaProvincias.cells[1].textContent;
             
                 
@@ -207,12 +226,15 @@ const registrarEventosProvincias = () => {
     if (currentFormProvinciasElement && !currentFormProvinciasElement.dataset.submitListenerAttached) {
         currentFormProvinciasElement.addEventListener('submit', async (e) => {
             e.preventDefault();
-            const botonEnviar = e.submitter;
+            const botonEnviar = e.submitter;// Botón que hizo submit.
+            // Deshabilitar y mostrar feedback.
             botonEnviar.disabled = true;
             botonEnviar.innerHTML = `<span class="spinner-border spinner-border-sm" aria-hidden="true"></span> Enviando...`;
             
             // const formData = new FormData(currentFormProvinciasElement);
-            
+            // No se usa FormData aquí, se construye un objeto JSON directamente.
+            // Esto asume que tu API para provincias espera un JSON con `nombre_provincia`.
+
 
 
             let targetUrl = "";
@@ -282,8 +304,7 @@ const registrarEventosProvincias = () => {
         currentFormProvinciasElement.dataset.submitListenerAttached = "true";
     }
 
-    // Registrar Listeners de Validación de Inputs 
-    // registrarValidadoresDeInput(); 
+    
     
 
  // --- Listener para evento personalizado ---

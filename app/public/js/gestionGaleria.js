@@ -2,23 +2,31 @@
 const urlAPIGaleria = "http://localhost:3000/galeria/";
 
 // --- Variables del Módulo ---
-// Estas se (re)asignarán CADA VEZ que la sección de usuarios se cargue.
+// Estas variables guardarán el estado y las referencias a elementos importantes de esta sección.
+// Se (re)asignarán CADA VEZ que la sección de galería se cargue dinámicamente.
+
 let modalGaleriaInstance;     // Para la instancia de new bootstrap.Modal()
 let currentFormGaleriaElement; // Para la referencia al <form id="register-formGal"> actual
 
-// Variable para determinar si se está creando o editando
+// Guarda la instancia del objeto Modal de Bootstrap para la galería.
 let accionFormGaleria = ''; 
-// ID del registro de la galería que se editará
+// Guarda la referencia al elemento <form> del modal de galería (ej. <form id="register-formGal">).
 let idFormGaleria = 0; 
 
 
-// --- Handlers para eventos del modal de Bootstrap ---
+// --- Handlers (manejadores) para eventos del modal de Bootstrap  ---
+// Estas funciones se ejecutarán cuando el modal de galería se muestre o se oculte.
+
+// Función que se ejecuta JUSTO ANTES de que el modal de galería se muestre.
 function handleModalBootstrapShow() {
+    // 'this' se refiere al elemento DOM del modal.
+    // Quita el atributo 'inert' para asegurar que el modal sea interactivo.
     if (this) this.removeAttribute("inert");
 }
 
+// Función que se ejecuta JUSTO DESPUÉS de que el modal de galería se ha ocultado.
 function handleModalBootstrapHide() {
-    // Uso currentFormUsuarioElement para el reset
+    // referencia al formulario actual del modal 
     if (currentFormGaleriaElement) {
         currentFormGaleriaElement.reset();
         // Limpiar mensajes de error específicos del formulario
@@ -33,11 +41,12 @@ function handleModalBootstrapHide() {
         imgPreviewGal.src = ''; 
         imgPreviewGal.style.display = 'none';
     }
+    // Limpia el input de archivo de imagen del modal de galería.
     const galPicInput = document.getElementById('galeria_pic'); // Limpiar el input file también
     if (galPicInput) {
         galPicInput.value = null;
     }
-
+    // Reinicia las variables de control de estado del formulario 
     accionFormGaleria = '';
     idFormGaleria = 0;
     
@@ -45,13 +54,17 @@ function handleModalBootstrapHide() {
     setTimeout(() => {
         if (btnAgregarGaleriaFocus) btnAgregarGaleriaFocus.focus();
         if (this) this.setAttribute("inert", "");
-    }, 10);
+    }, 10);// Pequeño delay.
 }
 
-// Función para cargar la galería desde el servidor
+// --- Función Principal Exportada (llamada desde admin.js para esta sección) ---
+// Responsable de cargar los datos de la galería, (re)inicializar su modal y formulario,
+// y registrar sus manejadores de eventos.
+
 export const cargarGaleria = async () => {
     console.log("Recargando datos de la galería desde la API...");
 
+    // Obtiene la referencia al cuerpo (<tbody>) de la tabla donde se mostrarán los elementos de la galería.
     const tablaCuerpoGaleria = document.querySelector("#tablaGaleria");
 
     // Verifica si el elemento de la tabla existe en el DOM
@@ -60,6 +73,7 @@ export const cargarGaleria = async () => {
         return;
     }
         // 1. OBTENER REFERENCIAS AL NUEVO DOM DEL MODAL Y FORMULARIO
+        //admin.js recrea el HTML de la sección.
         currentFormGaleriaElement = document.getElementById("register-formGal");
         const modalElementDOMGal = document.getElementById('modalGaleria');
 
@@ -73,17 +87,22 @@ export const cargarGaleria = async () => {
         }
 
         // 2. (RE)INICIALIZAR LA INSTANCIA DEL MODAL DE BOOTSTRAP
+            // Si ya existe una instancia de `modalGaleriaInstance` (de una carga anterior),
+            // se debe "desechar" la instancia antigua.
         if (modalGaleriaInstance && typeof modalGaleriaInstance.dispose === 'function') {
             if (modalGaleriaInstance._element) {
                 modalGaleriaInstance._element.removeEventListener("show.bs.modal", handleModalBootstrapShow);
                 modalGaleriaInstance._element.removeEventListener("hide.bs.modal", handleModalBootstrapHide);
             }
+            // `dispose()` limpia la instancia de Bootstrap.
             modalGaleriaInstance.dispose();
         }
+        // Crea una NUEVA instancia de `bootstrap.Modal` con el elemento DOM del modal de galería *actual*.
         modalGaleriaInstance = new bootstrap.Modal(modalElementDOMGal, {
-            backdrop: 'static',
-            keyboard: false
+            backdrop: 'static',// No cerrar al hacer clic fuera.
+            keyboard: false // No cerrar con tecla Escape.
         });
+            // (Re)Adjunta los manejadores de eventos `show` y `hide` al NUEVO elemento DOM del modal de galería.
         modalElementDOMGal.removeEventListener("show.bs.modal", handleModalBootstrapShow);
         modalElementDOMGal.removeEventListener("hide.bs.modal", handleModalBootstrapHide);
         modalElementDOMGal.addEventListener("show.bs.modal", handleModalBootstrapShow);
@@ -103,6 +122,7 @@ export const cargarGaleria = async () => {
         // Itera sobre cada objeto de galería y agrega una fila a la tabla
         dataGaleria.forEach((galeria) => {
             const filaGaleria = tablaCuerpoGaleria.insertRow(); // Más eficiente que crear tr y luego innerHTML
+            // Construye el HTML para las celdas (<td>) de la fila.
             filaGaleria.innerHTML = `
                 <td>${galeria.id_galeria}</td>
                 <td data-id="${galeria.fk_usuario}">${galeria.usuario}</td> 
@@ -126,12 +146,15 @@ export const cargarGaleria = async () => {
 
 // Función para registrar los eventos dinámicos de los botones en la galería
 const registrarEventosGaleria = () => {
+    // Verificar que las referencias al formulario y a la instancia del modal de galería estén disponibles.
     if (!currentFormGaleriaElement || !modalGaleriaInstance) {
         console.error("Faltan referencias al formulario o al modal.");
         return;
     }
+     // Obtener referencias a los botones y la tabla de galería.
     const btnAgregarGaleria = document.querySelector("#btnAgregarGaleria");
     const tablaGaleriaTBody = document.querySelector("#tablaGaleria");
+    // Advertir si no se encuentran elementos clave.
     if (!btnAgregarGaleria) console.warn("Botón '#btnAgregargaleria' no encontrado para registrar evento.");
     if (!tablaGaleriaTBody) console.warn("Elemento 'tablaGaleria' (tbody) no encontrado para registrar evento.");
 
@@ -143,19 +166,25 @@ const registrarEventosGaleria = () => {
             console.log("Botón Agregar Galeria presionado.");
             accionFormGaleria = "crear";
             idFormGaleria = 0;
-            currentFormGaleriaElement.reset(); // Usa la referencia actual del formulario
+            // Resetea el formulario de galería usando la referencia actual.
+            currentFormGaleriaElement.reset(); 
 
-            // currentFormUsuarioElement.querySelector(".modal-title").textContent = "Agregar Nuevo Usuario";
+            // Cambiar el título del modal de galería (opcional).
+            // const modalTitleElement = currentFormGaleriaElement.querySelector(".modal-title"); 
+            // if (modalTitleElement) modalTitleElement.textContent = "Agregar Nueva Imagen a Galería";
 
+            // Limpieza explícita de la vista previa de la imagen de galería.
             const imgPreviewGal = currentFormGaleriaElement.querySelector("#img-previewGal");
             if (imgPreviewGal) {
                 imgPreviewGal.src = "#";
                 imgPreviewGal.style.display = "none";
             }
+            // Limpieza explícita del input de archivo de galería.
             const galPicInput = currentFormGaleriaElement.querySelector("#galeria_pic");
             if (galPicInput) {
                 galPicInput.value = null;
             }
+            // Limpiar mensajes de error del formulario de galería.
             currentFormGaleriaElement.querySelectorAll('.errorGaleria, .errorGaleriaUsuario').forEach(span => {
                 span.textContent = "";
                 span.classList.add("escondido");
@@ -180,7 +209,12 @@ const registrarEventosGaleria = () => {
                 accionFormGaleria = "editar";
                 idFormGaleria = filaGaleria.cells[0].textContent;
                 currentFormGaleriaElement.reset();
-     
+
+                // Cambiar título del modal (opcional).
+                // const modalTitleElement = currentFormGaleriaElement.querySelector(".modal-title");
+                // if (modalTitleElement) modalTitleElement.textContent = "Editar Imagen de Galería";
+
+                // Limpieza explícita de la imagen y file input ANTES de poblar.
                 const imgPreviewGal = currentFormGaleriaElement.querySelector("#img-previewGal");
                 if (imgPreviewGal) {
                     imgPreviewGal.src = "#";
@@ -190,15 +224,18 @@ const registrarEventosGaleria = () => {
                 if (galPicInput) {
                     galPicInput.value = ""; // o null
                 }
+                 // Limpiar mensajes de error.
                 currentFormGaleriaElement.querySelectorAll('.errorGaleria, .errorGaleriaUsuario').forEach(span => {
                     span.textContent = "";
                     span.classList.add("escondido");
                 });
                 
+                // Poblar los campos del formulario de galería con los datos de la fila.
                 currentFormGaleriaElement.querySelector("#fk_usuario").value = filaGaleria.cells[1].dataset.id;
 
                 currentFormGaleriaElement.querySelector("#comentarioGal").value = filaGaleria.cells[3].textContent;
             
+                // Mostrar la imagen actual de la galería en la vista previa del modal.
                 const imgEnTablaSrc = filaGaleria.cells[2].querySelector("img")?.src;
                 if (imgPreviewGal && imgEnTablaSrc && !imgEnTablaSrc.endsWith("undefined")) {
                     imgPreviewGal.src = imgEnTablaSrc;
@@ -237,6 +274,7 @@ const registrarEventosGaleria = () => {
             ).set('labels', {ok:'Sí, Eliminar', cancel:'Cancelar'});
         }
     });
+    // Marcar el tbody para evitar re-registrar el listener.
     tablaGaleriaTBody.dataset.eventRegistered = "true";
 }
 
@@ -244,10 +282,12 @@ const registrarEventosGaleria = () => {
     if (currentFormGaleriaElement && !currentFormGaleriaElement.dataset.submitListenerAttached) {
         currentFormGaleriaElement.addEventListener('submit', async (e) => {
             e.preventDefault();
-            const botonEnviar = e.submitter;
+            const botonEnviar = e.submitter;// Botón que hizo submit.
+            // Deshabilitar botón y mostrar feedback.
             botonEnviar.disabled = true;
             botonEnviar.innerHTML = `<span class="spinner-border spinner-border-sm" aria-hidden="true"></span> Enviando...`;
             
+             // Crear FormData con los datos del formulario de galería.
             const formData = new FormData(currentFormGaleriaElement);
 
             let targetUrl = "";
@@ -274,9 +314,9 @@ const registrarEventosGaleria = () => {
                     catch (e) { errorMsg = await response.text() || errorMsg; }
                     throw new Error(errorMsg);
                 }
-                // const resJson = await response.json(); // Si esperas JSON en éxito
+                
                 alertify.success(accionFormGaleria === 'crear' ? "Galeria registrada." : "Galeria actualizada.");
-               // Cierra el modal si está visible y hay instancia válida
+                // Lógica para cerrar modal y recargar tabla 
                const modalGaleriaElement = document.getElementById("modalGaleria");
                 if (modalGaleriaElement && modalGaleriaElement.classList.contains("show")) {
                     const modalGaleriaInstance = bootstrap.Modal.getOrCreateInstance(modalGaleriaElement);
@@ -300,11 +340,13 @@ const registrarEventosGaleria = () => {
                 } else {
                     alertify.error(error.message);
                 }
-            } finally {
+            } finally {// Siempre se ejecuta.
+                // Restaurar botón de envío.
                 botonEnviar.disabled = false;
                 botonEnviar.textContent = "Guardar";
             }
         });
+        // Marcar formulario para evitar re-registrar listener de submit.
         currentFormGaleriaElement.dataset.submitListenerAttached = "true";
     }
 
