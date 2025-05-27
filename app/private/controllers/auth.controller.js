@@ -144,7 +144,7 @@ const login = (req, res) => {
 
           // Configuración de la cookie JWT para almacenar el token en el cliente
           const cookieOption = {    
-            expires: new Date(Date.now() + process.env.JWT_COOKIE_EXPIRES * 24 * 60 * 60 * 1000), // Define la expiración
+            expires: new Date(Date.now() + Number(process.env.JWT_COOKIE_EXPIRES) * 24 * 60 * 60 * 1000), // Define la expiración
             path: "/"  // Aplica la cookie en toda la aplicación
           };
 

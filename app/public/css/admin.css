@@ -2,10 +2,10 @@
 
 
 :root {
-    --color-barra-lateral: rgb(255,255,255);
+    --color-barra-lateral: rgb(255, 255, 255);
 
-    --color-texto:rgb(0,0,0,);
-    --color-texto-menu:rgb(134,136,144);
+    --color-texto:rgb(0, 0, 0,);
+    --color-texto-menu:rgb(134, 136, 144);
 
     --color-menu-hover:rgb(238,238,238);
     --color-menu-hover-texto:rgb(0,0,0);
@@ -71,7 +71,7 @@ body{
     justify-content: space-between;
     width: 250px;
     height: 100vh;
-    overflow: hidden;
+   
     padding: 20px 15px;
     background-color: var(--color-barra-lateral);
     transition: width 0.5s ease, left 0.5s ease;
@@ -133,8 +133,8 @@ body{
 .barra-lateral .btn {
     width: 100%;
     height: 45px;
-    margin-top: 20px;
-    margin-bottom: 20px;
+    margin-top: 5px;
+    margin-bottom: 5px;
     display: flex;
     align-items: center;
     justify-content: center;

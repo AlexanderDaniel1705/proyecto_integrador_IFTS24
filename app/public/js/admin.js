@@ -3,9 +3,13 @@ document.querySelector(".btn-log-out").addEventListener("click", () => {
     fetch("/auth/logout", { method: "POST" }) // Llama al servidor para eliminar la sesión
       .then(() => {
         sessionStorage.clear(); // Borra los datos del usuario almacenados en sessionStorage
-        document.location.href = "/"; // Redirige al usuario a la página principal
+        window.location.replace("/"); // Redirige al usuario a la página principal
       });
 });
+
+
+
+  
 
 // -----------------------------------------------------
 

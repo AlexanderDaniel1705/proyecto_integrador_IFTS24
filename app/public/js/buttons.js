@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
       btnLogout.addEventListener("click", () => {
         fetch("/auth/logout", { method: "POST" }).then(() => {
           sessionStorage.clear();
-          location.href = "/";
+          window.location.replace("/"); // Redirige al usuario a la página principal
         });
       });
     } else {

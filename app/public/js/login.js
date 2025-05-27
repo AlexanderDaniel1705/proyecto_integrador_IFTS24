@@ -95,3 +95,12 @@ togglePasswordIcon.addEventListener("click", () => {
         togglePasswordIcon.classList.add("fa-eye"); // Agrega el ícono de ojo abierto
     }
 });
+// Limpiar los campos de usuario y contraseña al cargar la página
+window.onload = () => {
+    const usernameInput = document.getElementById("user"); // 
+    const passwordInput = document.getElementById("password");
+
+    if (usernameInput) usernameInput.value = "";
+    if (passwordInput) passwordInput.value = "";
+};
+

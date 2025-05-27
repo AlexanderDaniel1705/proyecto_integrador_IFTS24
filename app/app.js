@@ -92,23 +92,23 @@ app.get("/admin", verifyRole("admin"), (req, res) => {
   res.sendFile(path.join(__dirname, "views/admin/admin.html"));
 });
 
-app.get("/gestionUsuarios", (req, res) => {
+app.get("/gestionUsuarios",verifyRole("admin"), (req, res) => {
   res.sendFile(path.join(__dirname, "views/admin/gestionUsuarios.html"));
 });
-app.get("/gestionGaleria", (req, res) => {
+app.get("/gestionGaleria", verifyRole("admin"), (req, res) => {
   res.sendFile(path.join(__dirname, "views/admin/gestionGaleria.html"));
 });
-app.get("/gestionProvincias", (req, res) => {
+app.get("/gestionProvincias",verifyRole("admin"), (req, res) => {
   res.sendFile(path.join(__dirname, "views/admin/gestionProvincias.html"));
 });
-app.get("/gestionGeneros", (req, res) => {
+app.get("/gestionGeneros", verifyRole("admin"), (req, res) => {
   res.sendFile(path.join(__dirname, "views/admin/gestionGeneros.html"));
 });
 
-app.get("/gestionRoles", (req, res) => {
+app.get("/gestionRoles", verifyRole("admin"), (req, res) => {
   res.sendFile(path.join(__dirname, "views/admin/gestionRoles.html"));
 });
-app.get("/gestionCervezas", (req, res) => {
+app.get("/gestionCervezas", verifyRole("admin"), (req, res) => {
   res.sendFile(path.join(__dirname, "views/admin/gestionCervezas.html"));
 });
 

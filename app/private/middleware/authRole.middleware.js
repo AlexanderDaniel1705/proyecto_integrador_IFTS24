@@ -44,6 +44,11 @@ const verifyRole = (requiredRoles) => {
       }
 
 
+        //Evitar cacheo de páginas privadas
+        res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+        res.setHeader('Pragma', 'no-cache');
+        res.setHeader('Expires', '0');
+        res.setHeader('Surrogate-Control', 'no-store');
 
       next(); 
       // Si todo es correcto, permite que la ejecución continúe hacia la siguiente función en la ruta.
