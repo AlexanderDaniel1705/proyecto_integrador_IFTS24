@@ -50,7 +50,7 @@ app.use("/uploadsGaleria", express.static(path.join(__dirname, "uploadsGaleria")
 // Importar rutas
 const authRouter = require("./private/routes/auth.router");
 const clientesRouter = require("./private/routes/clientes.router");
-const GaleriaRouter = require("./private/routes/galeria.router");
+const galeriaRouter = require("./private/routes/galeria.router");
 const cervezasRouter = require("./private/routes/cervezas.router");
 const provinciasRouter = require("./private/routes/provincias.router");
 const generosRouter = require("./private/routes/generos.router");
@@ -61,7 +61,7 @@ const rolesRouter = require("./private/routes/roles.router");
 // Usar rutas con prefijos
 app.use("/auth", authRouter);
 app.use("/clientes", clientesRouter);
-app.use("/galeria", GaleriaRouter);
+app.use("/galeria", galeriaRouter);
 app.use("/cervezas", cervezasRouter);
 app.use("/provincias", provinciasRouter);
 app.use("/generos", generosRouter);
@@ -97,6 +97,19 @@ app.get("/gestionUsuarios", (req, res) => {
 });
 app.get("/gestionGaleria", (req, res) => {
   res.sendFile(path.join(__dirname, "views/admin/gestionGaleria.html"));
+});
+app.get("/gestionProvincias", (req, res) => {
+  res.sendFile(path.join(__dirname, "views/admin/gestionProvincias.html"));
+});
+app.get("/gestionGeneros", (req, res) => {
+  res.sendFile(path.join(__dirname, "views/admin/gestionGeneros.html"));
+});
+
+app.get("/gestionRoles", (req, res) => {
+  res.sendFile(path.join(__dirname, "views/admin/gestionRoles.html"));
+});
+app.get("/gestionCervezas", (req, res) => {
+  res.sendFile(path.join(__dirname, "views/admin/gestionCervezas.html"));
 });
 
 app.get("/dashboard", (req, res) => {

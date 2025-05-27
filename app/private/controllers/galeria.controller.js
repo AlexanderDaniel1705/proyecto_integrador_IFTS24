@@ -61,7 +61,7 @@ const storeGaleria = (req, res) => {
       imageName = req.file.filename; // Si se sube un archivo, asigno el nombre de la imagenimageName
   }
     const { fk_usuario, pie_galeria } = req.body; // ID del usuario autenticado
-    const userId = req.user ? req.user.id : null; //Evita error si `req.user` es undefined
+    // const userId = req.user ? req.user.id : null; //Evita error si `req.user` es undefined
       //  Validar que todos los datos necesarios estén presentes
       if (!fk_usuario || !pie_galeria ) {
         return res.status(400).json({ error: "Todos los campos son requeridos." });
@@ -78,13 +78,16 @@ const storeGaleria = (req, res) => {
 // Función para actualizar un comentario en la galería
 const updateGaleria = (req, res) => {  
     // Obtiene el ID del comentario desde los parámetros de la solicitud
-    const comentarioId = req.params.id;
+    const galeriaId = req.params.id;
 
     // Extrae los datos del cuerpo de la solicitud
     const { fk_usuario, pie_galeria } = req.body;
-
-    // Si se sube una imagen nueva, usa su nombre; si no, mantiene el valor como "null"
-    const imageName = req.file ? req.file.filename : null;  
+    console.log("➡️ Datos recibidos para actualización:");
+    console.log("ID galeria:", galeriaId);
+    console.log("fk_usuario:", fk_usuario);
+    console.log("pie_galeria:", pie_galeria);
+    console.log("Archivo recibido:", req.file);
+    // let imageName = req.file ? req.file.filename : "/images/default.png";
 
     // Verifica que los campos obligatorios estén presentes
     if (!fk_usuario || !pie_galeria) {  
@@ -96,7 +99,7 @@ const updateGaleria = (req, res) => {
     const selectQuery = "SELECT img_galeria FROM galeria WHERE id_galeria = ?"; 
 
     // Ejecuta la consulta para recuperar la imagen actual
-    db.query(selectQuery, [comentarioId], (err, result) => {  
+    db.query(selectQuery, [galeriaId], (err, result) => {  
         // Si ocurre un error o no se encuentra el registro, se responde con un error
         if (err || result.length === 0) {  
             console.error("Error al buscar la imagen existente:", err); // Muestra el error en la consola
@@ -107,7 +110,9 @@ const updateGaleria = (req, res) => {
         const currentImage = result[0].img_galeria;  
 
         // Si no se subió una nueva imagen, se mantiene la existente
-        const finalImage = imageName || currentImage;  
+        // const finalImage = imageName || currentImage;  
+        const finalImage = req.file ? req.file.filename : currentImage;
+
 
         console.log("Imagen actual en la base de datos:", currentImage); // Muestra la imagen actual
         console.log("Imagen seleccionada para la actualización:", finalImage); // Muestra la imagen final seleccionada
@@ -116,7 +121,7 @@ const updateGaleria = (req, res) => {
         const updateQuery = "UPDATE galeria SET fk_usuario = ?, img_galeria = ?, pie_galeria = ? WHERE id_galeria = ?"; 
 
         // Ejecuta la consulta SQL con los nuevos datos
-        db.query(updateQuery, [fk_usuario, finalImage, pie_galeria, comentarioId], (updateErr) => {  
+        db.query(updateQuery, [fk_usuario, finalImage, pie_galeria, galeriaId], (updateErr) => {  
             // Si ocurre un error, responde con código 500
             if (updateErr) {  
                 console.error("Error al actualizar la galería:", updateErr); // Muestra el error en la consola

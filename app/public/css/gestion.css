@@ -41,6 +41,6 @@ td {
     display: none;
 }
 
-.text-center a {
+.text-center button {
     margin: 5px; /* Agrega espacio alrededor de los botones */
 }

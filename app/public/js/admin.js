@@ -144,3 +144,27 @@ document.querySelector(".btnGestionGaleria").addEventListener("click", async () 
     await cargarSeccion("/gestionGaleria", "/js/gestionGaleria.js", "cargarGaleria");
     document.dispatchEvent(new Event("seccionGestionGaleriaCargada")); // Evento personalizado
 });
+
+// Carga la sección de gestión de provincias al hacer clic en el botón correspondiente
+document.querySelector(".btnGestionProvincias").addEventListener("click", async () => {
+    await cargarSeccion("/gestionProvincias", "/js/gestionProvincias.js", "cargarProvincias");
+    document.dispatchEvent(new Event("seccionGestionProvinciasCargada")); // Evento personalizado
+});
+
+// Carga la sección de gestión de géneros al hacer clic en el botón correspondiente
+document.querySelector(".btnGestionGeneros").addEventListener("click", async () => {
+    await cargarSeccion("/gestionGeneros", "/js/gestionGeneros.js", "cargarGeneros");
+    document.dispatchEvent(new Event("seccionGestionGenerosCargada")); // Evento personalizado
+});
+
+// Carga la sección de gestión de géneros al hacer clic en el botón correspondiente
+document.querySelector(".btnGestionRoles").addEventListener("click", async () => {
+    await cargarSeccion("/gestionRoles", "/js/gestionRoles.js", "cargarRoles");
+    document.dispatchEvent(new Event("seccionGestionRolesCargada")); // Evento personalizado
+});
+
+// Carga la sección de gestión de cervezas al hacer clic en el botón correspondiente
+document.querySelector(".btnGestionCervezas").addEventListener("click", async () => {
+    await cargarSeccion("/gestionCervezas", "/js/gestionCervezas.js", "cargarCervezas");
+    document.dispatchEvent(new Event("seccionGestionCervezasCargada")); // Evento personalizado
+});

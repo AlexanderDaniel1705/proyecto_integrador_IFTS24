@@ -118,7 +118,7 @@ export const cargarGaleria = async () => {
         }); 
     } catch (error) {
         console.error("Error al cargar la galería:", error);
-        tablaCuerpoUsuarios.innerHTML = `<tr><td colspan="12" class="text-center text-danger">Error al cargar la galeria.</td></tr>`;
+        tablaCuerpoGaleria.innerHTML = `<tr><td colspan="12" class="text-center text-danger">Error al cargar la galeria.</td></tr>`;
     }
     // Registra los eventos dinámicos para los botones de Editar y Borrar
     registrarEventosGaleria();
@@ -195,7 +195,8 @@ const registrarEventosGaleria = () => {
                     span.classList.add("escondido");
                 });
                 
-                currentFormGaleriaElement.querySelector("#fk_user").value = filaGaleria.cells[1].textContent;
+                currentFormGaleriaElement.querySelector("#fk_usuario").value = filaGaleria.cells[1].dataset.id;
+
                 currentFormGaleriaElement.querySelector("#comentarioGal").value = filaGaleria.cells[3].textContent;
             
                 const imgEnTablaSrc = filaGaleria.cells[2].querySelector("img")?.src;
@@ -256,7 +257,7 @@ const registrarEventosGaleria = () => {
                 targetUrl = urlAPIGaleria;
                 metodoHTTP = "POST";
             } else if (accionFormGaleria === 'editar') {
-                targetUrl = `${urlAPIUGaleria}${idFormGaleria}`;
+                targetUrl = `${urlAPIGaleria}${idFormGaleria}`;
                 metodoHTTP = "PUT";
             } else {
                 console.error("Acción desconocida:", accionFormGaleria);
@@ -274,7 +275,7 @@ const registrarEventosGaleria = () => {
                     throw new Error(errorMsg);
                 }
                 // const resJson = await response.json(); // Si esperas JSON en éxito
-                alertify.success(accionFormGaleria === 'crear' ? "Galeria registrado." : "Galeria actualizado.");
+                alertify.success(accionFormGaleria === 'crear' ? "Galeria registrada." : "Galeria actualizada.");
                // Cierra el modal si está visible y hay instancia válida
                const modalGaleriaElement = document.getElementById("modalGaleria");
                 if (modalGaleriaElement && modalGaleriaElement.classList.contains("show")) {
@@ -292,7 +293,7 @@ const registrarEventosGaleria = () => {
 
             } catch (error) {
                 console.error("Error en submit:", error);
-                const mensajeErrorSpan = currentFormGaleriaElement.querySelector(".modal-footer .errorGaleria.escondido") || currentFormUsuarioElement.querySelector(".errorGaleria.escondido");
+                const mensajeErrorSpan = currentFormGaleriaElement.querySelector(".modal-footer .errorGaleria.escondido") || currentFormGaleriaElement.querySelector(".errorGaleria.escondido");
                 if(mensajeErrorSpan){
                     mensajeErrorSpan.textContent = error.message;
                     mensajeErrorSpan.classList.remove("escondido");
