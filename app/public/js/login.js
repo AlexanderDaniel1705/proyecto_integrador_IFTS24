@@ -27,13 +27,20 @@ document.querySelector("#login-form").addEventListener("submit", async (e) => {
 
     console.log("Datos enviados:", data); // Muestra los datos enviados en la consola
 
-    try {
-        // Realiza la solicitud al servidor para iniciar sesión
-        const res = await fetch("http://localhost:3000/auth/login", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(data) // Convierte el objeto en un string JSON para enviarlo
-        });
+try {
+    // Detecta automáticamente si estoy en localhost o usando un túnel como ngrok
+    const baseURL = window.location.origin.includes("localhost")
+        ? "http://localhost:3000"
+        : "https://6886-2800-40-80-1b5c-c591-4908-2da9-5706.ngrok-free.app"; 
+
+    // Realiza la solicitud al servidor para iniciar sesión
+    const res = await fetch(`${baseURL}/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+        credentials: "include" //  necesario para usar cookies/sesiones con ngrok
+    });
+
 
         const resJson = await res.json(); // Convierte la respuesta del servidor en JSON
         console.log(resJson); // Muestra la respuesta del servidor en la consola
@@ -54,6 +61,10 @@ document.querySelector("#login-form").addEventListener("submit", async (e) => {
         if (resJson.user) {
             sessionStorage.setItem('user', JSON.stringify(resJson.user)); // Convierte el objeto usuario en string y lo guarda
         }
+        if (resJson.token) {
+            sessionStorage.setItem('token', resJson.token); // Guarda el token para usarlo después
+        }
+
 
         // Redirige al usuario según el rol especificado en la respuesta
         if (resJson.redirect) {

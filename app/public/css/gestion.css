@@ -44,3 +44,16 @@ td {
 .text-center button {
     margin: 5px; /* Agrega espacio alrededor de los botones */
 }
+#fk_usuario {
+  border: none;
+  background-color: transparent; /* opcional, para que no se note fondo */
+  box-shadow: none; /* por si hay sombra de foco */
+  outline: none; /* elimina el borde azul en foco en algunos navegadores */
+}
+.table-responsive {
+  cursor: grab;
+}
+
+.table-responsive.active {
+  cursor: grabbing;
+}

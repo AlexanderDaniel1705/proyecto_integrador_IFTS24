@@ -5,6 +5,8 @@ const bcryptjs = require('bcryptjs'); // Importo el módulo 'bcryptjs', que se u
 const db = require('../models/db'); // Importo la configuración de la base de datos desde el archivo '../db/db'.
 const dotenv = require("dotenv");
 dotenv.config();
+const PUBLIC_URL = process.env.PUBLIC_URL || 'http://localhost:3000';
+
 
 
 
@@ -145,7 +147,10 @@ const login = (req, res) => {
           // Configuración de la cookie JWT para almacenar el token en el cliente
           const cookieOption = {    
             expires: new Date(Date.now() + Number(process.env.JWT_COOKIE_EXPIRES) * 24 * 60 * 60 * 1000), // Define la expiración
-            path: "/"  // Aplica la cookie en toda la aplicación
+            path: "/"  ,// Aplica la cookie en toda la aplicación
+            httpOnly: true,
+            secure: true,
+            sameSite: "None"
           };
 
           res.cookie("jwt", token, cookieOption); // Envía la cookie al navegador
@@ -159,13 +164,13 @@ const login = (req, res) => {
 
 
           // Definimos la URL de la imagen de perfil del usuario (si existe)
-          const imageUrl = user.imagen_perfil ? `http://localhost:3000/uploads/${user.imagen_perfil}` : null;
+          //const imageUrl = user.imagen_perfil ? `http://localhost:3000/uploads/${user.imagen_perfil}` : null;
+          const imageUrl = user.imagen_perfil ? `${PUBLIC_URL}/uploads/${user.imagen_perfil}` : `${PUBLIC_URL}/uploads/default.png`;
 
           // Enviamos la respuesta JSON con la información del usuario y el token
           res.json({ 
             message: 'Inicio de sesión exitoso',    
-            auth: true,    
-            token,    
+            auth: true,   
             redirect: redirectUrl,    
             user: { //Estructuro Datos del usuario para el frontend    
               usuario: user.usuario,    

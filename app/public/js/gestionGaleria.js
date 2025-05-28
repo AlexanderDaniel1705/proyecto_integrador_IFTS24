@@ -13,6 +13,59 @@ let accionFormGaleria = '';
 // Guarda la referencia al elemento <form> del modal de galería (ej. <form id="register-formGal">).
 let idFormGaleria = 0; 
 
+ // Código drag-scroll para la tabla galeria
+    function inicializarDragScroll() {
+    const tablaContenedor = document.querySelector('.table-responsive'); // Asumo que este es el contenedor de tu #tablaUsuarios
+
+    if (tablaContenedor && !tablaContenedor.dataset.dragScrollInitialized) { // Verifica si ya se inicializó
+        let isDown = false;
+        let startX;
+        let scrollLeft;
+
+        tablaContenedor.addEventListener('mousedown', (e) => {
+        // Evitar que el drag-scroll se active si se hace clic en un elemento interactivo dentro de la tabla.
+        // Ajusto el selector '.closest()' según los elementos interactivos 
+        if (e.target.closest('button, a, input, select, textarea, [onclick]')) {
+            isDown = false; // Asegura que no se inicie el drag si el clic fue en un control
+            tablaContenedor.classList.remove('active');
+            return;
+        }
+        isDown = true;
+        tablaContenedor.classList.add('active');
+        startX = e.pageX - tablaContenedor.offsetLeft;
+        scrollLeft = tablaContenedor.scrollLeft;
+        });
+
+        tablaContenedor.addEventListener('mouseleave', () => {
+        if (isDown) { // Solo actuar si el mouse estaba presionado y salió del contenedor
+            isDown = false;
+            tablaContenedor.classList.remove('active');
+        }
+        });
+
+        tablaContenedor.addEventListener('mouseup', () => {
+        if (isDown) { // Solo actuar si el mouse estaba presionado
+            isDown = false;
+            tablaContenedor.classList.remove('active');
+        }
+        });
+
+        tablaContenedor.addEventListener('mousemove', (e) => {
+        if (!isDown) return;
+        e.preventDefault(); // Prevenir la selección de texto mientras se arrastra
+        const x = e.pageX - tablaContenedor.offsetLeft;
+        const walk = (x - startX) * 2; // velocidad del scroll
+        tablaContenedor.scrollLeft = scrollLeft - walk;
+        });
+
+        tablaContenedor.dataset.dragScrollInitialized = 'true'; // Marca el elemento como inicializado
+        console.log("Drag-scroll inicializado para .table-responsive.");
+    } else if (tablaContenedor && tablaContenedor.dataset.dragScrollInitialized) {
+        // console.log("Drag-scroll ya estaba inicializado para este .table-responsive.");
+    } else {
+        console.warn("Contenedor .table-responsive no encontrado para inicializar drag-scroll.");
+    }
+    }
 
 // --- Handlers (manejadores) para eventos del modal de Bootstrap  ---
 // Estas funciones se ejecutarán cuando el modal de galería se muestre o se oculte.
@@ -63,7 +116,7 @@ function handleModalBootstrapHide() {
 
 export const cargarGaleria = async () => {
     console.log("Recargando datos de la galería desde la API...");
-
+    inicializarDragScroll();
     // Obtiene la referencia al cuerpo (<tbody>) de la tabla donde se mostrarán los elementos de la galería.
     const tablaCuerpoGaleria = document.querySelector("#tablaGaleria");
 
@@ -189,6 +242,28 @@ const registrarEventosGaleria = () => {
                 span.textContent = "";
                 span.classList.add("escondido");
             });
+             // ======= Obtener usuario desde sessionStorage y asignar al input =======
+        const usuarioJSON = sessionStorage.getItem('user');
+        // console.log("Usuario JSON desde sessionStorage:", usuarioJSON);
+
+        if (usuarioJSON) {
+            const usuarioObj = JSON.parse(usuarioJSON);
+            /* console.log("Objeto usuario parseado:", usuarioObj); */
+
+            const usuarioNombre = usuarioObj.usuario || "";
+        /*  console.log("Nombre del usuario a asignar:", usuarioId); */
+
+            const inputUsuario = currentFormGaleriaElement.querySelector("#fk_usuario");
+            if (inputUsuario) {
+                inputUsuario.value = usuarioNombre;
+                /* console.log("Valor del input fk_usuario asignado:", inputUsuario.value); */
+            } else {
+                console.warn("Input #fk_usuario no encontrado en el formulario.");
+            }
+        } else {
+            console.warn("No se encontró usuario en sessionStorage.");
+        }
+
 
             
             modalGaleriaInstance.show(); // Usa la instancia actual del modal

@@ -1,12 +1,14 @@
 // Archivo principal del servidor
 const dotenv = require('dotenv');
 const express = require("express"); // Framework Express
+const cors = require('cors');
 const path = require("path"); // Para manejar rutas
 const app = express(); // Inicializa la app Express
 const morgan = require("morgan");
 const cookieParser = require("cookie-parser"); 
 app.use(cookieParser());
 const verifyRole = require('./private/middleware/authRole.middleware');
+const verificarToken = require('./private/middleware/verificarToken');
 
 //MIddlewares
 app.use(morgan("dev"));
@@ -15,6 +17,8 @@ app.use(morgan("dev"));
 
 //  const result =
 dotenv.config({ path: path.join(__dirname, '../app/private/.env') });
+//const PUBLIC_URL = process.env.PUBLIC_URL || 'http://localhost:3000';
+
 // console.log('Ruta .env configurada en:', path.join(__dirname, '..../app/private/.env'));
 // console.log(`Conexión a la base de datos en: ${process.env.DB_HOST}`);
 
@@ -45,7 +49,29 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use("/uploadsGaleria", express.static(path.join(__dirname, "uploadsGaleria")));
 
+// Debe estar antes de app.use(cors(...))
+app.options('*', (req, res) => {
+  res.setHeader('Access-Control-Allow-Origin', 'https://6886-2800-40-80-1b5c-c591-4908-2da9-5706.ngrok-free.app');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+  res.setHeader('Access-Control-Allow-Private-Network', 'true');
+  return res.sendStatus(204);
+});
 
+// Después viene el cors (sin optionsSuccessStatus, porque ya lo manejaste arriba)
+app.use(cors({
+  origin: 'https://6886-2800-40-80-1b5c-c591-4908-2da9-5706.ngrok-free.app',
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+}));
+
+// Middleware adicional para todos los demás requests (no OPTIONS)
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Private-Network', 'true');
+  next();
+});
 
 // Importar rutas
 const authRouter = require("./private/routes/auth.router");
@@ -88,27 +114,27 @@ app.get("/registro", (req, res) => {
   res.sendFile(path.join(__dirname, "views/registro.html"));
 });
 
-app.get("/admin", verifyRole("admin"), (req, res) => {
+app.get("/admin",verificarToken, verifyRole("admin"), (req, res) => {
   res.sendFile(path.join(__dirname, "views/admin/admin.html"));
 });
 
-app.get("/gestionUsuarios",verifyRole("admin"), (req, res) => {
+app.get("/gestionUsuarios", (req, res) => {
   res.sendFile(path.join(__dirname, "views/admin/gestionUsuarios.html"));
 });
-app.get("/gestionGaleria", verifyRole("admin"), (req, res) => {
+app.get("/gestionGaleria",  (req, res) => {
   res.sendFile(path.join(__dirname, "views/admin/gestionGaleria.html"));
 });
-app.get("/gestionProvincias",verifyRole("admin"), (req, res) => {
+app.get("/gestionProvincias", (req, res) => {
   res.sendFile(path.join(__dirname, "views/admin/gestionProvincias.html"));
 });
-app.get("/gestionGeneros", verifyRole("admin"), (req, res) => {
+app.get("/gestionGeneros",  (req, res) => {
   res.sendFile(path.join(__dirname, "views/admin/gestionGeneros.html"));
 });
 
-app.get("/gestionRoles", verifyRole("admin"), (req, res) => {
+app.get("/gestionRoles", (req, res) => {
   res.sendFile(path.join(__dirname, "views/admin/gestionRoles.html"));
 });
-app.get("/gestionCervezas", verifyRole("admin"), (req, res) => {
+app.get("/gestionCervezas",  (req, res) => {
   res.sendFile(path.join(__dirname, "views/admin/gestionCervezas.html"));
 });
 
@@ -154,3 +180,5 @@ const PORT = process.env.PORT || 3001;
 app.listen(PORT, () =>
   console.log(`Servidor corriendo en: http://localhost:${PORT}`)
 );
+
+

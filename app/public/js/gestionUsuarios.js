@@ -18,6 +18,62 @@
     // Será 0 o nulo cuando la acción sea "crear".
     let idFormUsuario = 0;
 
+
+    // Código drag-scroll para la tabla usuarios
+    function inicializarDragScroll() {
+    const tablaContenedor = document.querySelector('.table-responsive'); // Asumo que este es el contenedor de tu #tablaUsuarios
+
+    if (tablaContenedor && !tablaContenedor.dataset.dragScrollInitialized) { // Verifica si ya se inicializó
+        let isDown = false;
+        let startX;
+        let scrollLeft;
+
+        tablaContenedor.addEventListener('mousedown', (e) => {
+        // Evitar que el drag-scroll se active si se hace clic en un elemento interactivo dentro de la tabla.
+        // Ajusto el selector '.closest()' según los elementos interactivos 
+        if (e.target.closest('button, a, input, select, textarea, [onclick]')) {
+            isDown = false; // Asegura que no se inicie el drag si el clic fue en un control
+            tablaContenedor.classList.remove('active');
+            return;
+        }
+        isDown = true;
+        tablaContenedor.classList.add('active');
+        startX = e.pageX - tablaContenedor.offsetLeft;
+        scrollLeft = tablaContenedor.scrollLeft;
+        });
+
+        tablaContenedor.addEventListener('mouseleave', () => {
+        if (isDown) { // Solo actuar si el mouse estaba presionado y salió del contenedor
+            isDown = false;
+            tablaContenedor.classList.remove('active');
+        }
+        });
+
+        tablaContenedor.addEventListener('mouseup', () => {
+        if (isDown) { // Solo actuar si el mouse estaba presionado
+            isDown = false;
+            tablaContenedor.classList.remove('active');
+        }
+        });
+
+        tablaContenedor.addEventListener('mousemove', (e) => {
+        if (!isDown) return;
+        e.preventDefault(); // Prevenir la selección de texto mientras se arrastra
+        const x = e.pageX - tablaContenedor.offsetLeft;
+        const walk = (x - startX) * 2; // velocidad del scroll
+        tablaContenedor.scrollLeft = scrollLeft - walk;
+        });
+
+        tablaContenedor.dataset.dragScrollInitialized = 'true'; // Marca el elemento como inicializado
+        console.log("Drag-scroll inicializado para .table-responsive.");
+    } else if (tablaContenedor && tablaContenedor.dataset.dragScrollInitialized) {
+        // console.log("Drag-scroll ya estaba inicializado para este .table-responsive.");
+    } else {
+        console.warn("Contenedor .table-responsive no encontrado para inicializar drag-scroll.");
+    }
+    }
+
+
     // Función genérica y reutilizable para cargar opciones en un elemento <select> desde una URL (API).
     const cargarSelectConOpciones = async (url, selectId, defaultOptionText, valorKey, textoKey) => {
     const selectElement = document.querySelector(selectId); 
@@ -98,7 +154,7 @@
     // y registrar los manejadores de eventos.
     export const cargarUsuarios = async () => {
         console.log("gestionUsuarios.js: Iniciando carga de sección de usuarios...");
-
+        inicializarDragScroll();
     // Obtiene la referencia al cuerpo (<tbody>) de la tabla donde se mostrarán los usuarios.
     const tablaCuerpoUsuarios = document.querySelector("#tablaUsuarios");
     if (!tablaCuerpoUsuarios) {
@@ -178,6 +234,7 @@
     // registrar todos los manejadores de eventos para los botones y el formulario.
     registrarTodosLosEventosUsuarios();
     };
+    
 
     // --- Registrar TODOS los Event Listeners de la sección ---
     const registrarTodosLosEventosUsuarios = () => {
@@ -402,7 +459,10 @@
             }
 
             try {
-                const response = await fetch(targetUrl, { method: metodoHTTP, body: formData });
+                const response = await fetch(targetUrl, { 
+                    method: metodoHTTP,
+                    body: formData,
+                    credentials: 'include' });
                 if (!response.ok) {
                     let errorMsg = `Error ${response.status}`;
                     try { 
